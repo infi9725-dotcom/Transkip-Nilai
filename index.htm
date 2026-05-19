@@ -1530,7 +1530,7 @@
 
             if (tabId === 'koneksi-sheet') {
                 document.getElementById('google-api-url-input').value = db.googleWebAppUrl;
-                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung & Tersinkronisasi' : 'Mencoba Menghubungkan...');
+                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung' : 'Mencoba Menghubungkan...');
             }
 
             updateStats();
