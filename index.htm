@@ -860,7 +860,7 @@
                                     <span id="panel-connection-text">Memuat...</span>
                                 </div>
                                 <button type="button" onclick="manualSyncTrigger()" class="py-2.5 px-5 bg-purple-650 hover:bg-purple-750 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center gap-1.5">
-                                    <i class="fa-solid fa-arrows-rotate"></i> Sinkron Ulang Data
+                                    <i class="fa-solid fa-arrows-rotate"></i> Tarik Data
                                 </button>
                             </div>
                         </div>
@@ -1605,7 +1605,7 @@
 
             if (tabId === 'koneksi-sheet') {
                 document.getElementById('google-api-url-input').value = db.googleWebAppUrl;
-                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung & Tersinkronisasi' : 'Mencoba Menghubungkan...');
+                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung' : 'Mencoba Menghubungkan...');
             }
 
             updateStats();
