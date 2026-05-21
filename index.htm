@@ -72,14 +72,67 @@
             from { opacity: 0; transform: translateY(3px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Collapsible Sidebar transitions */
+        #sidebar {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+        }
+        .sidebar-collapsed {
+            width: 5rem !important; /* Mode Sempit */
+        }
+        .sidebar-collapsed .sidebar-text {
+            display: none !important;
+        }
+        .sidebar-collapsed .sidebar-header-container {
+            flex-direction: column !important;
+            gap: 0.75rem !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .sidebar-collapsed nav p.sidebar-section-title {
+            opacity: 0;
+            height: 0;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden;
+        }
+        .sidebar-collapsed nav button {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 3.25rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            border-radius: 0.75rem !important;
+        }
+        .sidebar-collapsed nav button i {
+            margin-right: 0 !important;
+            font-size: 1.25rem !important;
+            width: auto !important;
+        }
+        .sidebar-collapsed .sidebar-profile-container {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .sidebar-collapsed .sidebar-logout-btn {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 3.25rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        .sidebar-collapsed .sidebar-logout-btn i {
+            margin-right: 0 !important;
+        }
     </style>
 </head>
 <body class="bg-neutral-50 text-neutral-900 min-h-full antialiased">
 
     <!-- ================= MODERN CLOUD LOADING PROGRESS OVERLAY ================= -->
-    <div id="loading-overlay" class="fixed inset-0 z-[200] hidden flex flex-col items-center justify-center bg-purple-950/85 backdrop-blur-md transition-all duration-300">
+    <div id="loading-overlay" class="fixed inset-0 z-[200] hidden flex flex-col items-center justify-center bg-purple-955/85 backdrop-blur-md transition-all duration-300">
         <div class="bg-white/10 border border-white/20 rounded-3xl p-8 max-w-sm w-full text-center text-white space-y-6 shadow-2xl backdrop-blur-lg mx-4">
-            <!-- Icon Loader Bundar -->
             <div class="relative w-24 h-24 mx-auto">
                 <div class="absolute inset-0 rounded-full border-4 border-purple-500/25 border-t-purple-400 animate-spin"></div>
                 <div class="absolute inset-2 bg-purple-900 rounded-full flex items-center justify-center shadow-inner">
@@ -92,7 +145,6 @@
                 <p class="text-xs text-purple-200" id="loading-status-subtitle">Sedang menyambungkan ke Google Sheets...</p>
             </div>
             
-            <!-- Progress Bar Frame -->
             <div class="space-y-2">
                 <div class="flex justify-between items-center text-xs font-semibold text-purple-300">
                     <span id="progress-text-label" class="font-mono">Menghubungkan...</span>
@@ -117,14 +169,20 @@
                 <div class="w-28 h-28 rounded-full bg-white flex items-center justify-center mb-5 shadow-lg overflow-hidden p-3 border-4 border-white/20">
                     <img src="https://iili.io/ByGTxzF.png" alt="Logo SDN 22" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://iili.io/ByGTxzF.th.png';">
                 </div>
-                <h2 class="text-3xl font-black tracking-[0.2em] uppercase text-white mb-2">LOGIN</h2>
-                <p class="text-[10px] text-purple-200 tracking-wider font-semibold uppercase">SDN 22 Tanah Keras</p>
+                <h2 class="text-2xl font-black tracking-[0.1em] uppercase text-center text-white mb-2">SDN 22<br>Tanah Keras</h2>
+                <p class="text-[10px] text-purple-200 tracking-widest font-semibold uppercase">Kab. Pesisir Selatan</p>
                 
                 <div class="hidden md:block absolute right-[-10px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-l-[10px] border-l-indigo-900 z-10"></div>
             </div>
 
             <div class="md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-white">
                 <form onsubmit="handleLoginSubmit(event)" class="space-y-5">
+                    
+                    <div class="mb-6 border-b border-purple-100 pb-3">
+                        <h2 class="text-3xl font-black text-purple-955 tracking-tight">TRANSKRIP NILAI</h2>
+                        <p class="text-xs text-neutral-400 mt-1 font-semibold uppercase tracking-wider">Virtualisasi Data & Pengarsipan Digital</p>
+                    </div>
+
                     <div>
                         <div class="relative flex items-center">
                             <span class="absolute left-4 text-purple-650 border-r border-neutral-200 pr-3">
@@ -165,80 +223,90 @@
 
 
     <div id="app-container" class="hidden min-h-full w-full flex flex-col md:flex-row">
+        <!-- COLLAPSIBLE SIDEBAR WITH TRANSITIONS -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-purple-950 via-indigo-950 to-neutral-950 border-r border-purple-900/40 flex flex-col justify-between transition-transform duration-300 transform -translate-x-full md:translate-x-0 md:static md:h-screen flex-shrink-0">
             <div>
+                <!-- SIDEBAR HEADER (SUPPORT COLLAPSE) -->
                 <div class="p-6 border-b border-purple-900/40">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-purple-950/50">
-                            <i class="fa-solid fa-graduation-cap text-lg text-purple-700"></i>
+                    <div class="flex items-center justify-between sidebar-header-container">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-purple-955/50 flex-shrink-0">
+                                <i class="fa-solid fa-graduation-cap text-lg text-purple-700"></i>
+                            </div>
+                            <div class="sidebar-text">
+                                <h1 class="font-extrabold text-sm tracking-wide text-white">SDN 22 TANAH KERAS</h1>
+                                <p class="text-[11px] text-purple-300/70 font-medium tracking-wider">SISTEM TRANSKRIP NILAI</p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 class="font-extrabold text-sm tracking-wide text-white">SDN 22 TANAH KERAS</h1>
-                            <p class="text-[11px] text-purple-300/70 font-medium tracking-wider">SISTEM TRANSKRIP NILAI</p>
-                        </div>
+                        
+                        <button onclick="toggleSidebarDesktop()" id="btn-toggle-sidebar-desktop" class="hidden md:flex w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 items-center justify-center text-white transition-colors cursor-pointer" title="Sembunyikan Menu">
+                            <i class="fa-solid fa-chevron-left transition-transform duration-300 text-xs" id="icon-toggle-sidebar-desktop"></i>
+                        </button>
                     </div>
                 </div>
 
+                <!-- SIDEBAR NAVIGATION -->
                 <nav class="p-4 space-y-1">
-                    <p class="px-3 py-2 text-xs font-semibold text-purple-400/80 uppercase tracking-wider">Navigasi Utama</p>
+                    <p class="px-3 py-2 text-xs font-semibold text-purple-400/80 uppercase tracking-wider sidebar-section-title">Navigasi Utama</p>
                     
-                    <button onclick="switchTab('beranda')" id="btn-beranda" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left bg-purple-600/25 text-white border border-purple-500/30 shadow-sm font-medium">
+                    <button onclick="switchTab('beranda')" id="btn-beranda" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left bg-purple-600/25 text-white border border-purple-500/30 shadow-sm font-medium" title="Beranda">
                         <i class="fa-solid fa-chart-pie w-5 text-center text-lg text-purple-300"></i>
-                        <span>Beranda</span>
+                        <span class="sidebar-text">Beranda</span>
                     </button>
 
-                    <button onclick="switchTab('data-transkrip')" id="btn-data-transkrip" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('data-transkrip')" id="btn-data-transkrip" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Data Transkrip Sekolah">
                         <i class="fa-solid fa-file-invoice w-5 text-center text-lg"></i>
-                        <span>Data Transkrip Sekolah</span>
+                        <span class="sidebar-text">Data Transkrip</span>
                     </button>
 
-                    <button onclick="switchTab('data-siswa')" id="btn-data-siswa" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('data-siswa')" id="btn-data-siswa" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Data Siswa">
                         <i class="fa-solid fa-user-graduate w-5 text-center text-lg"></i>
-                        <span>Data Siswa</span>
+                        <span class="sidebar-text">Data Siswa</span>
                     </button>
 
-                    <button onclick="switchTab('mata-pelajaran')" id="btn-mata-pelajaran" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('mata-pelajaran')" id="btn-mata-pelajaran" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Mata Pelajaran">
                         <i class="fa-solid fa-book-open w-5 text-center text-lg"></i>
-                        <span>Mata Pelajaran</span>
+                        <span class="sidebar-text">Mata Pelajaran</span>
                     </button>
 
-                    <button onclick="switchTab('input-nilai')" id="btn-input-nilai" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('input-nilai')" id="btn-input-nilai" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Input Nilai">
                         <i class="fa-solid fa-file-signature w-5 text-center text-lg"></i>
-                        <span>Input Nilai</span>
+                        <span class="sidebar-text">Input Nilai</span>
                     </button>
 
-                    <button onclick="switchTab('rekapan-nilai')" id="btn-rekapan-nilai" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('rekapan-nilai')" id="btn-rekapan-nilai" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Rekapan Input Nilai">
                         <i class="fa-solid fa-list-check w-5 text-center text-lg"></i>
-                        <span>Rekapan Input Nilai</span>
+                        <span class="sidebar-text">Rekapan Nilai</span>
                     </button>
 
-                    <p class="px-3 py-2 text-xs font-semibold text-purple-400/80 uppercase tracking-wider mt-4">Pengaturan Cetak & Tarik Data</p>
+                    <p class="px-3 py-2 text-xs font-semibold text-purple-400/80 uppercase tracking-wider mt-4 sidebar-section-title">Cetak & Cloud</p>
 
-                    <button onclick="switchTab('pengaturan-kop')" id="btn-pengaturan-kop" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('pengaturan-kop')" id="btn-pengaturan-kop" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Konfigurasi KOP Surat">
                         <i class="fa-solid fa-envelope-open-text w-5 text-center text-lg"></i>
-                        <span>Konfigurasi KOP Surat</span>
+                        <span class="sidebar-text">KOP Surat</span>
                     </button>
 
-                    <button onclick="switchTab('koneksi-sheet')" id="btn-koneksi-sheet" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium">
+                    <button onclick="switchTab('koneksi-sheet')" id="btn-koneksi-sheet" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium" title="Koneksi Google Sheets">
                         <i class="fa-solid fa-cloud-arrow-up w-5 text-center text-lg"></i>
-                        <span>TARIK DATA</span>
+                        <span class="sidebar-text">Tarik Data</span>
                     </button>
                 </nav>
             </div>
 
+            <!-- SIDEBAR FOOTER -->
             <div class="p-4 border-t border-purple-900/40 bg-purple-950/60 flex flex-col gap-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-purple-900/50 border border-purple-700/50 flex items-center justify-center text-white font-bold text-sm">
+                <div class="flex items-center space-x-3 sidebar-profile-container">
+                    <div class="w-10 h-10 rounded-full bg-purple-900/50 border border-purple-700/50 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                         SDN
                     </div>
-                    <div>
+                    <div class="sidebar-text">
                         <p class="text-sm font-semibold text-white">SDN22TK</p>
                         <p class="text-xs text-purple-300/70">Operator SDN 22</p>
                     </div>
                 </div>
-                <button onclick="handleLogout()" class="w-full py-2.5 bg-purple-900/20 hover:bg-red-950/40 text-purple-300 hover:text-red-200 border border-purple-900/40 hover:border-red-900/40 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2">
+                <button onclick="handleLogout()" class="w-full py-2.5 bg-purple-900/20 hover:bg-red-950/40 text-purple-300 hover:text-red-200 border border-purple-900/40 hover:border-red-900/40 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 sidebar-logout-btn" title="Keluar Aplikasi">
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    <span>Keluar Aplikasi</span>
+                    <span class="sidebar-text">Keluar</span>
                 </button>
             </div>
         </aside>
@@ -319,7 +387,6 @@
                     </div>
                 </div>
 
-                <!-- ================= TABEL INFORMASI DATA SEKOLAH (BERANDA UTAMA) ================= -->
                 <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden fade-in">
                     <div class="p-5 border-b border-neutral-200 bg-neutral-50/50 flex items-center justify-between">
                         <div class="flex items-center space-x-2.5">
@@ -358,6 +425,14 @@
                                     <tr class="hover:bg-neutral-50/50 transition-colors">
                                         <td class="py-3.5 px-4 font-semibold text-neutral-500">Kecamatan</td>
                                         <td class="py-3.5 px-4 font-semibold text-neutral-800">Bayang</td>
+                                    </tr>
+                                    <tr class="hover:bg-neutral-50/50 transition-colors">
+                                        <td class="py-3.5 px-4 font-semibold text-neutral-500">Email</td>
+                                        <td class="py-3.5 px-4 font-semibold text-neutral-800">UPTsdn22tanahkeras@gmail.com</td>
+                                    </tr>
+                                    <tr class="hover:bg-neutral-50/50 transition-colors">
+                                        <td class="py-3.5 px-4 font-semibold text-neutral-500">Website</td>
+                                        <td class="py-3.5 px-4 font-semibold text-neutral-800">www.sdn22tk.my.id</td>
                                     </tr>
                                     <tr class="hover:bg-neutral-50/50 transition-colors">
                                         <td class="py-3.5 px-4 font-semibold text-neutral-500">Akreditasi</td>
@@ -471,10 +546,10 @@
                         <p class="text-neutral-500 text-sm mt-1">Konfigurasi struktur kurikulum mata pelajaran wajib dan muatan lokal.</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openModal('modal-mapel-wajib')" class="py-2.5 px-4 bg-purple-650 hover:bg-purple-750 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center gap-2">
+                        <button onclick="openMapelWajibModalForAdd()" class="py-2.5 px-4 bg-purple-650 hover:bg-purple-750 text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center gap-2">
                             <i class="fa-solid fa-plus"></i> Tambah Mapel Wajib
                         </button>
-                        <button onclick="openModal('modal-mapel-mulok')" class="py-2.5 px-4 bg-neutral-200 hover:bg-neutral-300 text-neutral-900 text-xs font-bold rounded-xl transition-all shadow-sm flex items-center gap-2">
+                        <button onclick="openMapelMulokModalForAdd()" class="py-2.5 px-4 bg-neutral-200 hover:bg-neutral-300 text-neutral-900 text-xs font-bold rounded-xl transition-all shadow-sm flex items-center gap-2">
                             <i class="fa-solid fa-plus"></i> Tambah Mulok
                         </button>
                     </div>
@@ -754,7 +829,7 @@
 
             <section id="tab-koneksi-sheet" class="tab-content space-y-6 fade-in hidden">
                 <div class="bg-white p-6 rounded-2xl border border-neutral-200 shadow-sm">
-                    <h2 class="text-2xl font-black text-neutral-955">TARIK DATA APLIKASI</h2>
+                    <h2 class="text-2xl font-black text-neutral-955">Sinkronisasi Cloud Google Sheets</h2>
                     <p class="text-neutral-500 text-sm mt-1">Status dan konfigurasi hubungan API basis data eksternal Google Sheets Anda.</p>
                 </div>
 
@@ -785,7 +860,7 @@
                                     <span id="panel-connection-text">Memuat...</span>
                                 </div>
                                 <button type="button" onclick="manualSyncTrigger()" class="py-2.5 px-5 bg-purple-650 hover:bg-purple-750 text-white text-xs font-extrabold rounded-xl shadow-md transition-all flex items-center gap-1.5">
-                                    <i class="fa-solid fa-arrows-rotate"></i> Tarik Data
+                                    <i class="fa-solid fa-arrows-rotate"></i> Sinkron Ulang Data
                                 </button>
                             </div>
                         </div>
@@ -818,7 +893,7 @@
         </main>
     </div>
 
-    <!-- modal section is kept identical as existing -->
+    <!-- modal section -->
     <div id="modal-transkrip" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
         <div class="bg-white border border-neutral-300 rounded-3xl w-full max-w-4xl shadow-2xl overflow-hidden my-8 transform transition-all">
             <div class="bg-neutral-50 p-6 border-b border-neutral-200 flex justify-between items-center">
@@ -892,7 +967,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-neutral-700 mb-1 uppercase tracking-wide">Nama Kepala Sekolah <span class="text-red-500">*</span></label>
-                            <input type="text" id="trans-kepsek" required placeholder="Nama Lengkap Beserta Gelar" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 focus:ring-2 focus:ring-purple-100 rounded-xl px-4 py-3 text-sm text-neutral-955 focus:outline-none transition-all">
+                            <input type="text" id="trans-kepsek" required placeholder="Contoh: RINA MELATI, M.Pd." class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 focus:ring-2 focus:ring-purple-100 rounded-xl px-4 py-3 text-sm text-neutral-955 focus:outline-none transition-all">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-neutral-700 mb-1 uppercase tracking-wide">NIP <span class="text-red-500">*</span></label>
@@ -979,13 +1054,15 @@
         </div>
     </div>
 
+    <!-- MODAL MAPEL WAJIB (MENDUKUNG ADD & EDIT) -->
     <div id="modal-mapel-wajib" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
         <div class="bg-white border border-neutral-300 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden my-8 transform transition-all">
             <div class="bg-neutral-50 p-5 border-b border-neutral-200 flex justify-between items-center">
-                <h3 class="font-extrabold text-base text-neutral-900">Tambah Mata Pelajaran Wajib</h3>
+                <h3 class="font-extrabold text-base text-neutral-900" id="modal-mapel-wajib-title">Tambah Mata Pelajaran Wajib</h3>
                 <button onclick="closeModal('modal-mapel-wajib')" class="text-neutral-500 hover:text-neutral-950"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-mapel-wajib" onsubmit="saveMapelWajib(event)" class="p-6 space-y-4">
+                <input type="hidden" id="wajib-id">
                 <div>
                     <label class="block text-xs font-bold text-neutral-700 mb-1 uppercase tracking-wide">Nama Mata Pelajaran <span class="text-red-500">*</span></label>
                     <input type="text" id="wajib-nama" required placeholder="Contoh: Matematika" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 focus:ring-2 focus:ring-purple-100 rounded-xl px-4 py-2.5 text-sm text-neutral-955 focus:outline-none transition-all">
@@ -998,13 +1075,15 @@
         </div>
     </div>
 
+    <!-- MODAL MAPEL MULOK (MENDUKUNG ADD & EDIT) -->
     <div id="modal-mapel-mulok" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
         <div class="bg-white border border-neutral-300 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden my-8 transform transition-all">
             <div class="bg-neutral-50 p-5 border-b border-neutral-200 flex justify-between items-center">
-                <h3 class="font-extrabold text-base text-neutral-900">Tambah Muatan Lokal</h3>
+                <h3 class="font-extrabold text-base text-neutral-900" id="modal-mapel-mulok-title">Tambah Muatan Lokal</h3>
                 <button onclick="closeModal('modal-mapel-mulok')" class="text-neutral-500 hover:text-neutral-950"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-mapel-mulok" onsubmit="saveMapelMulok(event)" class="p-6 space-y-4">
+                <input type="hidden" id="mulok-id">
                 <div>
                     <label class="block text-xs font-bold text-neutral-700 mb-1 uppercase tracking-wide">Nama Muatan Lokal <span class="text-red-500">*</span></label>
                     <input type="text" id="mulok-nama" required placeholder="Contoh: Budaya Alam Minangkabau" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 focus:ring-2 focus:ring-purple-100 rounded-xl px-4 py-2.5 text-sm text-neutral-955 focus:outline-none transition-all">
@@ -1063,12 +1142,10 @@
                 marginLeft: 2.0,
                 marginRight: 2.0
             },
-            // Tautan Web App Apps Script terpasang secara paten
             googleWebAppUrl: 'https://script.google.com/macros/s/AKfycbwVMh2sHhRd7XygoYOtJMsXnhzkTn6UNbUND38C6XsMqpjQk_WpI9-GW-Up9JkfCwei6g/exec',
             syncStatus: 'disconnected'
         };
 
-        // Pemetaan Ukuran Kertas Fisik
         const paperDimensions = {
             'A4': { width: '21.0cm', height: '29.7cm', cssSize: '210mm 297mm' },
             'F4': { width: '21.5cm', height: '33.0cm', cssSize: '215mm 330mm' },
@@ -1078,11 +1155,34 @@
 
         let confirmCallback = null;
 
-        // Fungsi khusus penyaring data ganda untuk mengamankan data dan memblokir duplikasi
+        // ================= PENJAGA ID UNIK & PENGUNCI URUTAN PEMBUATAN =================
+        
+        // Generator ID Unik Kombinasi Milidetik + String Acak Alfanumerik (Mencegah ID Ganda Permanen)
+        function generateUniqueId(prefix) {
+            return prefix + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        }
+
+        // Fungsi Sanitasi Urutan: Memastikan data lama memiliki id yang sah dan timestamp 'createdAt' berurutan
+        function sanitizeEntitiesOrder(list, prefix) {
+            if (!Array.isArray(list)) return [];
+            let baseTime = Date.now();
+            return list.map((item, idx) => {
+                const newItem = { ...item };
+                if (!newItem.id) {
+                    newItem.id = generateUniqueId(prefix);
+                }
+                if (!newItem.createdAt) {
+                    // Menyusun timestamp mundur berdasarkan urutan indeks untuk mempertahankan tata letak asli
+                    newItem.createdAt = baseTime - (list.length - idx) * 1000;
+                }
+                return newItem;
+            });
+        }
+
+        // Sinkronisasi data lokal & cloud bebas data ganda (Menggunakan ID sebagai acuan unik, bukan Nama)
         function syncAndCleanDB(cloudData, forceCloudAsTruth = false) {
             if (!cloudData || typeof cloudData !== 'object') return;
 
-            // Helper untuk mengembalikan array unik berdasarkan properti tertentu
             const getUniqueArray = (arr, keyExtractor) => {
                 if (!Array.isArray(arr)) return [];
                 const seen = new Set();
@@ -1096,43 +1196,32 @@
             };
 
             if (forceCloudAsTruth) {
-                // Menimpa cache lokal sepenuhnya dengan Cloud tetapi membersihkan duplikasi di dalam cloud itu sendiri
-                db.transkrip = getUniqueArray(cloudData.transkrip, t => t.nomor || t.id);
-                db.siswa = getUniqueArray(cloudData.siswa, s => s.nisn || s.id);
-                db.mapelWajib = getUniqueArray(cloudData.mapelWajib, m => m.nama || m.id);
-                db.mapelMulok = getUniqueArray(cloudData.mapelMulok, m => m.nama || m.id);
+                db.transkrip = getUniqueArray(cloudData.transkrip, t => t.id);
+                db.siswa = getUniqueArray(cloudData.siswa, s => s.id);
+                db.mapelWajib = getUniqueArray(cloudData.mapelWajib, m => m.id);
+                db.mapelMulok = getUniqueArray(cloudData.mapelMulok, m => m.id);
                 db.nilaiSiswa = cloudData.nilaiSiswa || {};
                 
                 if (cloudData.kop) db.kop = Object.assign({}, db.kop, cloudData.kop);
                 if (cloudData.pageSetup) db.pageSetup = Object.assign({}, db.pageSetup, cloudData.pageSetup);
             } else {
-                // Rekonsiliasi data lokal dan cloud secara aman tanpa merusak keunikan data
-                
-                // 1. Transkrip (Unik berdasarkan Nomor / ID)
+                // Penggabungan data lokal dan cloud dengan menyortir duplikasi ID
                 const localTranskrip = db.transkrip || [];
                 const cloudTranskrip = cloudData.transkrip || [];
-                const mergedTranskrip = [...cloudTranskrip, ...localTranskrip];
-                db.transkrip = getUniqueArray(mergedTranskrip, t => t.nomor || t.id);
+                db.transkrip = getUniqueArray([...cloudTranskrip, ...localTranskrip], t => t.id);
 
-                // 2. Siswa (Unik berdasarkan NISN / ID)
                 const localSiswa = db.siswa || [];
                 const cloudSiswa = cloudData.siswa || [];
-                const mergedSiswa = [...cloudSiswa, ...localSiswa];
-                db.siswa = getUniqueArray(mergedSiswa, s => s.nisn || s.id);
+                db.siswa = getUniqueArray([...cloudSiswa, ...localSiswa], s => s.id);
 
-                // 3. Mapel Wajib (Unik berdasarkan Nama)
                 const localWajib = db.mapelWajib || [];
                 const cloudWajib = cloudData.mapelWajib || [];
-                const mergedWajib = [...cloudWajib, ...localWajib];
-                db.mapelWajib = getUniqueArray(mergedWajib, m => m.nama || m.id);
+                db.mapelWajib = getUniqueArray([...cloudWajib, ...localWajib], m => m.id);
 
-                // 4. Mapel Mulok (Unik berdasarkan Nama)
                 const localMulok = db.mapelMulok || [];
                 const cloudMulok = cloudData.mapelMulok || [];
-                const mergedMulok = [...cloudMulok, ...localMulok];
-                db.mapelMulok = getUniqueArray(mergedMulok, m => m.nama || m.id);
+                db.mapelMulok = getUniqueArray([...cloudMulok, ...localMulok], m => m.id);
 
-                // 5. Nilai Siswa (Digabungkan secara presisi)
                 if (cloudData.nilaiSiswa && typeof cloudData.nilaiSiswa === 'object') {
                     for (const nisn in cloudData.nilaiSiswa) {
                         if (cloudData.nilaiSiswa.hasOwnProperty(nisn)) {
@@ -1148,6 +1237,12 @@
                 if (cloudData.pageSetup) db.pageSetup = Object.assign({}, db.pageSetup, cloudData.pageSetup);
             }
 
+            // Jalankan sanitasi urutan pembuatan
+            db.transkrip = sanitizeEntitiesOrder(db.transkrip, 't');
+            db.siswa = sanitizeEntitiesOrder(db.siswa, 's');
+            db.mapelWajib = sanitizeEntitiesOrder(db.mapelWajib, 'w');
+            db.mapelMulok = sanitizeEntitiesOrder(db.mapelMulok, 'm');
+
             saveDBToLocalStorage();
         }
 
@@ -1157,9 +1252,7 @@
             if (localDB) {
                 const parsed = JSON.parse(localDB);
                 db = Object.assign(db, parsed);
-                // Menghilangkan data ganda lokal jika tidak sengaja tersimpan sebelumnya
                 syncAndCleanDB(db, true);
-                // Pastikan URL Apps Script terkunci permanen
                 db.googleWebAppUrl = 'https://script.google.com/macros/s/AKfycbwVMh2sHhRd7XygoYOtJMsXnhzkTn6UNbUND38C6XsMqpjQk_WpI9-GW-Up9JkfCwei6g/exec';
                 db.syncStatus = 'disconnected';
             } else {
@@ -1169,7 +1262,6 @@
                 saveDBToLocalStorage();
             }
 
-            // Jika user sudah masuk, lakukan sinkronisasi data cloud otomatis
             const isLogged = localStorage.getItem('sdn22_logged_in');
             if (isLogged === 'true') {
                 autoFetchFromCloud();
@@ -1194,7 +1286,7 @@
             }
         }
 
-        // Eksekusi Login Kredensial Pengguna dengan Layar Progress Sinkronisasi 1-100%
+        // Eksekusi Login Kredensial Pengguna
         function handleLoginSubmit(e) {
             e.preventDefault();
             const usernameInput = document.getElementById('login-username').value.trim().toUpperCase();
@@ -1208,19 +1300,16 @@
             if (usernameInput === 'SDN22TK' && passwordInput === '12345') {
                 showProgressOverlay("Sedang Login", "Harap tunggu");
                 
-                // Mengambil data Cloud secara real-time
                 fetch(db.googleWebAppUrl)
                 .then(res => res.json())
                 .then(cloudData => {
                     animateProgressBar(100, () => {
                         if (cloudData && typeof cloudData === 'object') {
-                            // Terapkan sinkronisasi bersih bebas data ganda (menimpa lokal dengan versi cloud unik)
                             syncAndCleanDB(cloudData, true);
                             
                             db.syncStatus = 'connected';
-                            updateCloudStatusUI('connected', 'Data Google Sheet Aktif');
+                            updateCloudStatusUI('connected', 'Terhubung');
 
-                            // Refresh seluruh komponen UI
                             renderTranskripTable();
                             renderSiswaTable();
                             renderMapelTables();
@@ -1259,7 +1348,6 @@
             }
         }
 
-        // ================= PROGRESS BAR CONTROLLER (1% - 100%) =================
         function showProgressOverlay(title, subtitle) {
             const overlay = document.getElementById('loading-overlay');
             const titleEl = document.getElementById('loading-status-title');
@@ -1278,7 +1366,6 @@
             }
         }
 
-        // Menyembunyikan overlay progress bar
         function hideProgressOverlay() {
             const overlay = document.getElementById('loading-overlay');
             if (overlay) {
@@ -1286,7 +1373,6 @@
             }
         }
 
-        // Animasi pergerakan progress bar
         function animateProgressBar(target, callback) {
             const barFill = document.getElementById('progress-bar-fill');
             const percentText = document.getElementById('progress-percentage');
@@ -1304,7 +1390,7 @@
                     
                     barFill.style.width = `100%`;
                     percentText.innerText = `100%`;
-                    labelText.innerText = `Berhasil!`;
+                    labelText.innerText = `Sinkronisasi Selesai!`;
                     iconEl.className = "fa-solid fa-circle-check text-2xl text-green-400 animate-none";
 
                     setTimeout(() => {
@@ -1329,7 +1415,6 @@
             }, 30);
         }
 
-        // SINKRONISASI CLOUD OTOMATIS MANUAL DENGAN ANIMASI PROGRESS BAR
         function manualSyncTrigger() {
             showProgressOverlay("Tarik Data", "Harap Tunggu");
             
@@ -1338,11 +1423,10 @@
             .then(cloudData => {
                 animateProgressBar(100, () => {
                     if (cloudData && typeof cloudData === 'object') {
-                        // Gabungkan data cloud ke lokal secara aman & buang data ganda
                         syncAndCleanDB(cloudData, false);
                         
                         db.syncStatus = 'connected';
-                        updateCloudStatusUI('connected', 'Data Google Sheet Aktif');
+                        updateCloudStatusUI('connected', 'Data Aktif');
 
                         renderTranskripTable();
                         renderSiswaTable();
@@ -1366,7 +1450,6 @@
             });
         }
 
-        // Eksekusi Sesi Keluar Aplikasi (Logout)
         function handleLogout() {
             triggerConfirm('Apakah Anda yakin ingin keluar dari sistem aplikasi transkrip?', () => {
                 localStorage.removeItem('sdn22_logged_in');
@@ -1379,9 +1462,7 @@
             localStorage.setItem('sdn22_transcript_db', JSON.stringify(db));
         }
 
-        // SINKRONISASI KELUAR OTOMATIS (PUSH KONTEN KE SHEET)
         function triggerAutoSyncToCloud() {
-            // Bersihkan data ganda terlebih dahulu sebelum di-POST
             syncAndCleanDB(db, true);
             updateCloudStatusUI('syncing', 'Menyinkronkan ke Google Sheet...');
             
@@ -1405,7 +1486,6 @@
             });
         }
 
-        // SINKRONISASI CLOUD OTOMATIS (PULL KONTEN SAAT INITS)
         function autoFetchFromCloud() {
             updateCloudStatusUI('syncing', 'Mengunduh data cloud...');
             
@@ -1413,13 +1493,11 @@
             .then(res => res.json())
             .then(cloudData => {
                 if (cloudData && typeof cloudData === 'object') {
-                    // Gabungkan data cloud ke lokal secara aman & buang data ganda
                     syncAndCleanDB(cloudData, false);
                     
                     db.syncStatus = 'connected';
                     updateCloudStatusUI('connected', 'Data Google Sheet Aktif');
 
-                    // Refresh Tampilan UI Komponen
                     renderTranskripTable();
                     renderSiswaTable();
                     renderMapelTables();
@@ -1435,7 +1513,6 @@
             });
         }
 
-        // Mengatur representasi UI indikator status cloud di navbar/header
         function updateCloudStatusUI(status, text) {
             const headerStatus = document.getElementById('header-cloud-status');
             const headerStatusText = document.getElementById('header-cloud-status-text');
@@ -1483,7 +1560,6 @@
             saveDBToLocalStorage();
         }
 
-        // Realtime Clock Updater
         function updateClock() {
             const timeEl = document.getElementById('current-datetime');
             if (timeEl) {
@@ -1492,7 +1568,6 @@
         }
         setInterval(updateClock, 1000);
 
-        // Tab switching controller
         function switchTab(tabId) {
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => tab.classList.add('hidden'));
@@ -1510,7 +1585,7 @@
             });
 
             const sidebar = document.getElementById('sidebar');
-            if (!sidebar.classList.contains('-translate-x-full')) {
+            if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
             }
 
@@ -1530,13 +1605,12 @@
 
             if (tabId === 'koneksi-sheet') {
                 document.getElementById('google-api-url-input').value = db.googleWebAppUrl;
-                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung' : 'Mencoba Menghubungkan...');
+                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung & Tersinkronisasi' : 'Mencoba Menghubungkan...');
             }
 
             updateStats();
         }
 
-        // Sub Mapel switching tabs
         function switchSubMapel(type) {
             const wajibTab = document.getElementById('tab-sub-wajib');
             const mulokTab = document.getElementById('tab-sub-mulok');
@@ -1556,7 +1630,6 @@
             }
         }
 
-        // Toggle mobile sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             if (sidebar.classList.contains('-translate-x-full')) {
@@ -1566,7 +1639,37 @@
             }
         }
 
-        // Custom Confirmation Dialog
+        function toggleSidebarDesktop() {
+            const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('icon-toggle-sidebar-desktop');
+            const btn = document.getElementById('btn-toggle-sidebar-desktop');
+            
+            sidebar.classList.toggle('sidebar-collapsed');
+            const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebar_collapsed', isCollapsed);
+            
+            if (isCollapsed) {
+                icon.classList.add('rotate-180');
+                btn.setAttribute('title', 'Tampilkan Menu');
+            } else {
+                icon.classList.remove('rotate-180');
+                btn.setAttribute('title', 'Sembunyikan Menu');
+            }
+        }
+
+        function initSidebarState() {
+            const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('icon-toggle-sidebar-desktop');
+            const btn = document.getElementById('btn-toggle-sidebar-desktop');
+            
+            if (isCollapsed && sidebar && icon && btn) {
+                sidebar.classList.add('sidebar-collapsed');
+                icon.classList.add('rotate-180');
+                btn.setAttribute('title', 'Tampilkan Menu');
+            }
+        }
+
         function triggerConfirm(message, callback) {
             document.getElementById('confirm-message').innerText = message;
             document.getElementById('modal-confirm').classList.remove('hidden');
@@ -1586,7 +1689,6 @@
             closeConfirmModal();
         });
 
-        // Custom Toast Notification System
         function showToast(title, desc, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1618,7 +1720,6 @@
             }, 4000);
         }
 
-        // Modal toggling
         function openModal(id, titleText = null) {
             const modal = document.getElementById(id);
             if (modal) {
@@ -1630,7 +1731,6 @@
             }
         }
 
-        // Menutup modal form
         function closeModal(id) {
             const modal = document.getElementById(id);
             if (modal) {
@@ -1640,7 +1740,6 @@
             }
         }
 
-        // Render Dashboard Stats
         function updateStats() {
             document.getElementById('stat-transkrip').innerText = db.transkrip.length;
             document.getElementById('stat-siswa').innerText = db.siswa.length;
@@ -1650,7 +1749,6 @@
 
         // ================= KOP SURAT & PAGE LOGIC =================
 
-        // Memuat Pengaturan Halaman ke Tab Rekapan
         function loadPageSetupToRekap() {
             document.getElementById('rekap-input-size').value = db.pageSetup.paperSize || 'F4';
             document.getElementById('rekap-input-margin-top').value = db.pageSetup.marginTop !== undefined ? db.pageSetup.marginTop : 2.0;
@@ -1659,7 +1757,6 @@
             document.getElementById('rekap-input-margin-right').value = db.pageSetup.marginRight !== undefined ? db.pageSetup.marginRight : 2.0;
         }
 
-        // Menyimpan instan Page Setup dari Tab Rekapan secara Auto-Save
         function updatePageSetupFromRekap() {
             db.pageSetup = {
                 paperSize: document.getElementById('rekap-input-size').value,
@@ -1672,7 +1769,6 @@
             updateLiveKopPreview();
         }
 
-        // Load data KOP dari database ke Form Input
         function loadKopSettingsToForm() {
             document.getElementById('kop-input-logo-kiri').value = db.kop.logoKiri || '';
             document.getElementById('kop-input-logo-kanan').value = db.kop.logoKanan || '';
@@ -1687,7 +1783,6 @@
             updateLiveKopPreview();
         }
 
-        // Memperbarui UI Pratinjau Kop & Halaman Secara Real-time (Watermark terpusat otomatis)
         function updateLiveKopPreview() {
             const logoKiri = db.kop.logoKiri || '';
             const logoKanan = db.kop.logoKanan || '';
@@ -1729,7 +1824,6 @@
             previewEl.style.boxSizing = 'border-box';
             previewEl.style.transition = 'all 0.15s ease-out';
 
-            // Skala visual yang proporsional untuk simulasi pratinjau
             previewEl.innerHTML = `
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; align-items: center; justify-content: center; z-index: 1; box-sizing: border-box;">
                     <img src="https://iili.io/ByVcBVV.png" style="width: 220px; height: 220px; opacity: 0.08; object-fit: contain;" alt="Watermark SDN 22">
@@ -1811,7 +1905,7 @@
                         <div style="width: 170px; text-align: center; font-family: 'Times New Roman', serif; font-size: 8px; line-height: 1.35; color: #000;">
                             <div>Kec. Bayang, 19 Mei 2026</div>
                             <div style="margin-bottom: 35px;">Kepala Sekolah,</div>
-                            <div style="font-weight: bold; text-decoration: underline; text-transform: uppercase;">NAMA KEPALA SEKOLAH, M.Pd</div>
+                            <div style="font-weight: bold; text-decoration: underline;">RINA MELATI, M.Pd.</div>
                             <div>NIP. 198005122005012001</div>
                         </div>
                     </div>
@@ -1819,7 +1913,6 @@
             `;
         }
 
-        // Menyimpan data KOP baru ke database + Cloud Sync
         function saveKopSettings(e) {
             e.preventDefault();
 
@@ -1844,11 +1937,13 @@
 
         // ================= DATA TRANSKRIP LOGIC =================
 
-        // Render Data Transkrip Table
         function renderTranskripTable(filteredList = null) {
             const tbody = document.getElementById('transkrip-table-body');
             if (!tbody) return;
-            const list = filteredList || db.transkrip;
+            
+            // Urutkan transkrip berdasarkan tanggal pembuatan
+            const originalList = filteredList || db.transkrip;
+            const list = [...originalList].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
             tbody.innerHTML = '';
 
             const countEl = document.getElementById('transkrip-count');
@@ -1883,7 +1978,6 @@
             });
         }
 
-        // SAVE TRANSKRIP
         function saveTranskrip(e) {
             e.preventDefault();
             const id = document.getElementById('transkrip-id').value;
@@ -1900,13 +1994,13 @@
             if (id) {
                 const index = db.transkrip.findIndex(t => t.id === id);
                 if (index !== -1) {
-                    db.transkrip[index] = { id, judul, nomor, satuan, npsn, tglKelulusan, tempat, tglTranskrip, kepsek, nip };
+                    db.transkrip[index] = { ...db.transkrip[index], judul, nomor, satuan, npsn, tglKelulusan, tempat, tglTranskrip, kepsek, nip };
                     logAction('Transkrip', `Memperbarui info Transkrip: ${nomor}`);
                     showToast('Sukses', 'Data transkrip sekolah berhasil diperbarui.');
                 }
             } else {
-                const newId = 't_' + Date.now();
-                db.transkrip.push({ id: newId, judul, nomor, satuan, npsn, tglKelulusan, tempat, tglTranskrip, kepsek, nip });
+                const newId = generateUniqueId('t');
+                db.transkrip.push({ id: newId, judul, nomor, satuan, npsn, tglKelulusan, tempat, tglTranskrip, kepsek, nip, createdAt: Date.now() });
                 logAction('Transkrip', `Menambah data transkrip baru: ${nomor}`);
                 showToast('Sukses', 'Data transkrip sekolah baru berhasil ditambahkan.');
             }
@@ -1961,11 +2055,13 @@
 
         // ================= DATA SISWA LOGIC =================
 
-        // Render Data Siswa Table
         function renderSiswaTable(filteredList = null) {
             const tbody = document.getElementById('siswa-table-body');
             if (!tbody) return;
-            const list = filteredList || db.siswa;
+            
+            // Urutkan siswa secara kronologis
+            const originalList = filteredList || db.siswa;
+            const list = [...originalList].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
             tbody.innerHTML = '';
 
             const countEl = document.getElementById('siswa-count');
@@ -2001,7 +2097,6 @@
             });
         }
 
-        // SAVE SISWA
         function saveSiswa(e) {
             e.preventDefault();
             const id = document.getElementById('siswa-id').value;
@@ -2020,7 +2115,7 @@
                 const index = db.siswa.findIndex(s => s.id === id);
                 if (index !== -1) {
                     const oldNISN = db.siswa[index].nisn;
-                    db.siswa[index] = { id, nama, nisn, tempatLahir, tglLahir, ijazah };
+                    db.siswa[index] = { ...db.siswa[index], nama, nisn, tempatLahir, tglLahir, ijazah };
                     
                     if (oldNISN !== nisn && db.nilaiSiswa[oldNISN]) {
                         db.nilaiSiswa[nisn] = db.nilaiSiswa[oldNISN];
@@ -2031,8 +2126,8 @@
                     showToast('Sukses', 'Data siswa berhasil diperbarui.');
                 }
             } else {
-                const newId = 's_' + Date.now();
-                db.siswa.push({ id: newId, nama, nisn, tempatLahir, tglLahir, ijazah });
+                const newId = generateUniqueId('s');
+                db.siswa.push({ id: newId, nama, nisn, tempatLahir, tglLahir, ijazah, createdAt: Date.now() });
                 db.nilaiSiswa[nisn] = {};
                 
                 logAction('Siswa', `Menambahkan siswa baru: ${nama}`);
@@ -2046,7 +2141,6 @@
             updateStats();
         }
 
-        // EDIT SISWA
         function editSiswa(id) {
             const item = db.siswa.find(s => s.id === id);
             if (!item) return;
@@ -2061,7 +2155,6 @@
             openModal('modal-siswa', 'Profil Lengkap Siswa');
         }
 
-        // DELETE SISWA
         function deleteSiswa(id) {
             const item = db.siswa.find(s => s.id === id);
             if (!item) return;
@@ -2087,22 +2180,59 @@
             renderSiswaTable(filtered);
         }
 
-        // ================= MATA PELAJARAN LOGIC =================
+        // ================= MATA PELAJARAN LOGIC (TERKUNCI URUTAN) =================
 
-        // Render Mata Pelajaran Tables
+        function openMapelWajibModalForAdd() {
+            document.getElementById('wajib-id').value = '';
+            document.getElementById('wajib-nama').value = '';
+            openModal('modal-mapel-wajib', 'Tambah Mata Pelajaran Wajib');
+        }
+
+        function openMapelMulokModalForAdd() {
+            document.getElementById('mulok-id').value = '';
+            document.getElementById('mulok-nama').value = '';
+            openModal('modal-mapel-mulok', 'Tambah Muatan Lokal');
+        }
+
+        function editMapel(id, type) {
+            if (type === 'wajib') {
+                const item = db.mapelWajib.find(m => m.id === id);
+                if (!item) return;
+                document.getElementById('wajib-id').value = item.id;
+                document.getElementById('wajib-nama').value = item.nama;
+                openModal('modal-mapel-wajib', 'Edit Mata Pelajaran Wajib');
+            } else {
+                const item = db.mapelMulok.find(m => m.id === id);
+                if (!item) return;
+                document.getElementById('mulok-id').value = item.id;
+                document.getElementById('mulok-nama').value = item.nama;
+                openModal('modal-mapel-mulok', 'Edit Muatan Lokal');
+            }
+        }
+
+        // Render Tabel Kurikulum (Diurutkan Berdasarkan Waktu Input secara Berurutan 100%)
         function renderMapelTables() {
             const wajibBody = document.getElementById('mapel-wajib-table-body');
             if (wajibBody) {
                 wajibBody.innerHTML = '';
-                if (db.mapelWajib.length === 0) {
+                // Selalu urutkan dari yang pertama kali dimasukkan (createdAt paling tua/kecil)
+                const sortedWajib = [...db.mapelWajib].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                
+                if (sortedWajib.length === 0) {
                     wajibBody.innerHTML = `<tr><td colspan="2" class="p-8 text-center text-neutral-400 text-xs font-semibold uppercase tracking-wider">Mata Pelajaran Wajib masih kosong.</td></tr>`;
                 } else {
-                    db.mapelWajib.forEach(item => {
+                    sortedWajib.forEach((item, idx) => {
                         wajibBody.innerHTML += `
                             <tr class="hover:bg-neutral-50 transition-colors">
-                                <td class="p-4 text-sm font-semibold text-neutral-900">${item.nama}</td>
+                                <td class="p-4 text-sm font-semibold text-neutral-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded bg-purple-50 text-purple-650 flex items-center justify-center font-mono text-xs font-extrabold">${idx + 1}</span>
+                                    <span>${item.nama}</span>
+                                </td>
                                 <td class="p-4 text-right">
-                                    <button onclick="deleteMapel('${item.id}', 'wajib')" class="p-1.5 bg-purple-650 hover:bg-purple-750 text-white rounded-lg transition-colors text-xs" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                                    <div class="inline-flex space-x-2">
+                                        <button onclick="editMapel('${item.id}', 'wajib')" class="p-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 border border-neutral-300 rounded-lg transition-colors text-xs" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                        <button onclick="deleteMapel('${item.id}', 'wajib')" class="p-1.5 bg-purple-650 hover:bg-purple-750 text-white rounded-lg transition-colors text-xs" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -2113,15 +2243,23 @@
             const mulokBody = document.getElementById('mapel-mulok-table-body');
             if (mulokBody) {
                 mulokBody.innerHTML = '';
-                if (db.mapelMulok.length === 0) {
+                const sortedMulok = [...db.mapelMulok].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                
+                if (sortedMulok.length === 0) {
                     mulokBody.innerHTML = `<tr><td colspan="2" class="p-8 text-center text-neutral-400 text-xs font-semibold uppercase tracking-wider">Mata Pelajaran Muatan Lokal masih kosong.</td></tr>`;
                 } else {
-                    db.mapelMulok.forEach(item => {
+                    sortedMulok.forEach((item, idx) => {
                         mulokBody.innerHTML += `
                             <tr class="hover:bg-neutral-50 transition-colors">
-                                <td class="p-4 text-sm font-semibold text-neutral-900">${item.nama}</td>
+                                <td class="p-4 text-sm font-semibold text-neutral-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded bg-neutral-100 text-neutral-600 flex items-center justify-center font-mono text-xs font-extrabold">${idx + 1}</span>
+                                    <span>${item.nama}</span>
+                                </td>
                                 <td class="p-4 text-right">
-                                    <button onclick="deleteMapel('${item.id}', 'mulok')" class="p-1.5 bg-purple-650 hover:bg-purple-750 text-white rounded-lg transition-colors text-xs" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                                    <div class="inline-flex space-x-2">
+                                        <button onclick="editMapel('${item.id}', 'mulok')" class="p-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 border border-neutral-300 rounded-lg transition-colors text-xs" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                        <button onclick="deleteMapel('${item.id}', 'mulok')" class="p-1.5 bg-purple-650 hover:bg-purple-750 text-white rounded-lg transition-colors text-xs" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -2130,41 +2268,66 @@
             }
         }
 
-        // SAVE MAPEL WAJIB
         function saveMapelWajib(e) {
             e.preventDefault();
+            const id = document.getElementById('wajib-id').value;
             const textEl = document.getElementById('wajib-nama');
-            const nama = textEl.value;
+            const nama = textEl.value.trim();
 
-            if (db.mapelWajib.some(m => m.nama.toLowerCase() === nama.toLowerCase())) {
+            if (!nama) return;
+
+            const isDuplicate = db.mapelWajib.some(m => m.nama.toLowerCase() === nama.toLowerCase() && m.id !== id);
+            if (isDuplicate) {
                 showToast('Gagal', 'Nama mata pelajaran wajib sudah terdaftar.', 'error');
                 return;
             }
 
-            db.mapelWajib.push({ id: 'w_' + Date.now(), nama });
-            logAction('Kurikulum', `Menambahkan Mapel Wajib: ${nama}`);
-            showToast('Sukses', 'Mata Pelajaran Wajib berhasil ditambahkan.');
-            
+            if (id) {
+                const index = db.mapelWajib.findIndex(m => m.id === id);
+                if (index !== -1) {
+                    db.mapelWajib[index].nama = nama;
+                    logAction('Kurikulum', `Mengubah Mapel Wajib: ${nama}`);
+                    showToast('Sukses', 'Mata Pelajaran Wajib berhasil diperbarui.');
+                }
+            } else {
+                // Gunakan ID unik anti-kembar dan masukkan timestamp pembuatan
+                db.mapelWajib.push({ id: generateUniqueId('w'), nama, createdAt: Date.now() });
+                logAction('Kurikulum', `Menambahkan Mapel Wajib: ${nama}`);
+                showToast('Sukses', 'Mata Pelajaran Wajib berhasil ditambahkan.');
+            }
+
             triggerAutoSyncToCloud();
             closeModal('modal-mapel-wajib');
             renderMapelTables();
             updateStats();
         }
 
-        // SAVE MAPEL MULOK
         function saveMapelMulok(e) {
             e.preventDefault();
+            const id = document.getElementById('mulok-id').value;
             const textEl = document.getElementById('mulok-nama');
-            const nama = textEl.value;
+            const nama = textEl.value.trim();
 
-            if (db.mapelMulok.some(m => m.nama.toLowerCase() === nama.toLowerCase())) {
+            if (!nama) return;
+
+            const isDuplicate = db.mapelMulok.some(m => m.nama.toLowerCase() === nama.toLowerCase() && m.id !== id);
+            if (isDuplicate) {
                 showToast('Gagal', 'Nama muatan lokal sudah terdaftar.', 'error');
                 return;
             }
 
-            db.mapelMulok.push({ id: 'm_' + Date.now(), nama });
-            logAction('Kurikulum', `Menambahkan Muatan Lokal: ${nama}`);
-            showToast('Sukses', 'Mata Pelajaran Muatan Lokal berhasil ditambahkan.');
+            if (id) {
+                const index = db.mapelMulok.findIndex(m => m.id === id);
+                if (index !== -1) {
+                    db.mapelMulok[index].nama = nama;
+                    logAction('Kurikulum', `Mengubah Muatan Lokal: ${nama}`);
+                    showToast('Sukses', 'Mata Pelajaran Muatan Lokal berhasil diperbarui.');
+                }
+            } else {
+                db.mapelMulok.push({ id: generateUniqueId('m'), nama, createdAt: Date.now() });
+                logAction('Kurikulum', `Menambahkan Muatan Lokal: ${nama}`);
+                showToast('Sukses', 'Mata Pelajaran Muatan Lokal berhasil ditambahkan.');
+            }
 
             triggerAutoSyncToCloud();
             closeModal('modal-mapel-mulok');
@@ -2172,7 +2335,6 @@
             updateStats();
         }
 
-        // DELETE MAPEL
         function deleteMapel(id, type) {
             if (type === 'wajib') {
                 const item = db.mapelWajib.find(m => m.id === id);
@@ -2201,7 +2363,8 @@
             }
         }
 
-        // INPUT NILAI: Populating Siswa Dropdown
+        // ================= INPUT NILAI LOGIC =================
+
         function populateInputNilaiSiswaDropdown() {
             const select = document.getElementById('input-nilai-siswa-select');
             if (!select) return;
@@ -2218,7 +2381,6 @@
             }
         }
 
-        // Reset Tampilan Input Nilai
         function resetInputNilaiView() {
             document.getElementById('input-nilai-nisn').value = '';
             document.getElementById('input-nilai-placeholder').classList.remove('hidden');
@@ -2226,7 +2388,6 @@
             document.getElementById('input-nilai-siswa-select').value = '';
         }
 
-        // Event handler saat siswa dipilih pada menu Input Nilai
         function onStudentSelectChange() {
             const select = document.getElementById('input-nilai-siswa-select');
             const textNisn = document.getElementById('input-nilai-nisn');
@@ -2249,15 +2410,18 @@
             renderInputNilaiTable(selectedNISN);
         }
 
-        // Render Lembar Penilaian Siswa
         function renderInputNilaiTable(nisn) {
             const tbody = document.getElementById('input-nilai-table-body');
             if (!tbody) return;
             tbody.innerHTML = '';
 
+            // Pastikan urutan mata pelajaran terkunci sesuai waktu diinput
+            const sortedWajib = [...db.mapelWajib].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            const sortedMulok = [...db.mapelMulok].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
             const allMapel = [
-                ...db.mapelWajib.map(m => ({ ...m, type: 'Wajib' })),
-                ...db.mapelMulok.map(m => ({ ...m, type: 'Muatan Lokal' }))
+                ...sortedWajib.map(m => ({ ...m, type: 'Wajib' })),
+                ...sortedMulok.map(m => ({ ...m, type: 'Muatan Lokal' }))
             ];
 
             const totalMapelEl = document.getElementById('input-nilai-total-mapel');
@@ -2302,7 +2466,6 @@
             calculateLiveGradesAverage();
         }
 
-        // Hitung Rata-rata secara Live
         function calculateLiveGradesAverage() {
             const inputs = document.querySelectorAll('.grade-input');
             let totalScore = 0;
@@ -2324,7 +2487,6 @@
             }
         }
 
-        // Simpan Data Nilai Siswa Ke Database LocalStorage + Cloud Sync
         function saveStudentGrades() {
             const select = document.getElementById('input-nilai-siswa-select');
             const nisn = select.value;
@@ -2378,7 +2540,6 @@
 
         // ================= REKAPAN NILAI LOGIC =================
 
-        // Mendapatkan list siswa yang memiliki nilai
         function getSiswaWithGrades() {
             return db.siswa.filter(student => {
                 const grades = db.nilaiSiswa[student.nisn];
@@ -2386,13 +2547,15 @@
             });
         }
 
-        // Hitung rata-rata & jumlah mapel terisi per siswa
         function getStudentSummary(nisn) {
             const savedGrades = db.nilaiSiswa[nisn] || {};
             let totalScore = 0;
             let count = 0;
 
-            db.mapelWajib.forEach(m => {
+            const sortedWajib = [...db.mapelWajib].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            const sortedMulok = [...db.mapelMulok].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+            sortedWajib.forEach(m => {
                 const score = savedGrades[m.id];
                 if (score !== undefined) {
                     totalScore += parseFloat(score);
@@ -2400,7 +2563,7 @@
                 }
             });
 
-            db.mapelMulok.forEach(m => {
+            sortedMulok.forEach(m => {
                 const score = savedGrades[m.id];
                 if (score !== undefined) {
                     totalScore += parseFloat(score);
@@ -2412,11 +2575,10 @@
             return {
                 average: average.replace('.', ','),
                 totalGraded: count,
-                totalAvailable: db.mapelWajib.length + db.mapelMulok.length
+                totalAvailable: sortedWajib.length + sortedMulok.length
             };
         }
 
-        // Render Rekapan Table View
         function renderRekapanTable(filteredList = null) {
             const tbody = document.getElementById('rekapan-table-body');
             if (!tbody) return;
@@ -2445,7 +2607,7 @@
                         <td class="p-4 text-center font-semibold text-neutral-700">
                             ${summary.totalGraded} / ${summary.totalAvailable} Mapel
                         </td>
-                        <td class="p-4 text-center font-bold font-mono text-purple-950 text-base">
+                        <td class="p-4 text-center font-bold font-mono text-purple-955 text-base">
                             ${summary.average}
                         </td>
                         <td class="p-4 text-right">
@@ -2499,16 +2661,15 @@
                 judul: 'TRANSKRIP NILAI KELULUSAN',
                 nomor: '[BELUM DIATUR/DIINPUT]',
                 satuan: 'UPT SDN 22 Tanah Keras',
-                npsn: '[NPSN BELUM DIATUR]',
+                npsn: '10301884',
                 tglKelulusan: '',
                 tempat: 'Tanah Keras',
                 tglTranskrip: new Date().toISOString().split('T')[0],
-                kepsek: '[Nama Kepala Sekolah]',
+                kepsek: 'RINA MELATI, M.Pd.',
                 nip: '[NIP Kepala Sekolah]'
             };
         }
 
-        // Penyesuaian Ukuran Font di Output Cetak Lembaran Transkrip (Pemerintah 16px, Dinas 14px, Sekolah 16px)
         function generateTranscriptHTML(student, template) {
             const savedGrades = db.nilaiSiswa[student.nisn] || {};
             let totalScore = 0;
@@ -2516,7 +2677,11 @@
             let rowsHTML = '';
             let rowNum = 1;
 
-            db.mapelWajib.forEach(m => {
+            // Pastikan urutan mata pelajaran tersortir di cetakan transkrip
+            const sortedWajib = [...db.mapelWajib].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            const sortedMulok = [...db.mapelMulok].sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+            sortedWajib.forEach(m => {
                 const score = savedGrades[m.id];
                 const displayScore = score !== undefined ? formatGradeToID(score) : '-';
                 if (score !== undefined) {
@@ -2533,7 +2698,7 @@
                 rowNum++;
             });
 
-            if (db.mapelMulok.length > 0) {
+            if (sortedMulok.length > 0) {
                 rowsHTML += `
                     <tr>
                         <td class="text-center bold">${rowNum}.</td>
@@ -2542,7 +2707,7 @@
                     </tr>
                 `;
                 const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-                db.mapelMulok.forEach((m, subIndex) => {
+                sortedMulok.forEach((m, subIndex) => {
                     const score = savedGrades[m.id];
                     const displayScore = score !== undefined ? formatGradeToID(score) : '-';
                     if (score !== undefined) {
@@ -2566,11 +2731,11 @@
 
             const docNo = template.nomor || '[Nomor Belum Ditentukan]';
             const schName = template.satuan || 'UPT SDN 22 Tanah Keras';
-            const schNpsn = template.npsn || '-';
+            const schNpsn = template.npsn || '10301884';
             const graduateDate = template.tglKelulusan ? formatDateIndonesian(template.tglKelulusan) : '-';
             const transPlace = template.tempat || 'Tanah Keras';
             const transDate = template.tglTranskrip ? formatDateIndonesian(template.tglTranskrip) : '-';
-            const kepsekName = template.kepsek || '[Nama Kepala Sekolah]';
+            const kepsekName = template.kepsek || 'RINA MELATI, M.Pd.';
             const kepsekNip = template.nip || '-';
 
             const kop = db.kop;
@@ -2591,7 +2756,6 @@
                                     </td>
                                     <td style="width: 76%; text-align: center; border: none; vertical-align: middle; padding: 0;">
                                         <div style="font-family: 'Times New Roman', serif; text-transform: uppercase; line-height: 1.2; color: #000;">
-                                            <!-- KOP UKURAN FONT YANG DISESUAIKAN -->
                                             <div style="font-size: 16px; font-weight: bold; margin: 0 0 2px 0; letter-spacing: 0.5px;">${kop.pemerintah}</div>
                                             <div style="font-size: 14px; font-weight: bold; margin: 0 0 2px 0; letter-spacing: 0.5px;">${kop.dinas}</div>
                                             <div style="font-size: 16px; font-weight: bold; margin: 3px 0 3px 0; letter-spacing: 1px;">${kop.sekolah}</div>
@@ -2686,7 +2850,6 @@
             `;
         }
 
-        // Trigger Cetak Per Siswa dengan Parameter Margin & Kertas Terpilih
         function cetakTranskripSiswa(nisn) {
             const student = db.siswa.find(s => s.nisn === nisn);
             if (!student) {
@@ -2709,7 +2872,6 @@
                     <title>Transkrip Nilai - ${student.nama}</title>
                     <link rel="icon" type="image/png" href="https://iili.io/ByGTxzF.png">
                     <style>
-                        /* CONFIG MEDIA PRINT */
                         @media print {
                             @page {
                                 size: ${dims.cssSize} portrait;
@@ -2737,7 +2899,6 @@
                             }
                         }
 
-                        /* CONFIG MEDIA SCREEN */
                         @media screen {
                             body {
                                 background-color: #f3f4f6;
@@ -2794,7 +2955,6 @@
                             box-sizing: border-box;
                         }
 
-                        /* Watermark */
                         .watermark-container {
                             position: absolute;
                             top: 0;
@@ -2904,7 +3064,6 @@
                         .signature-block .name-line {
                             font-weight: bold;
                             text-decoration: underline;
-                            text-transform: uppercase;
                         }
                     </style>
                 </head>
@@ -2929,7 +3088,6 @@
             printWindow.document.close();
         }
 
-        // Trigger Cetak Masal
         function cetakSemuaTranskrip() {
             const activeSiswa = getSiswaWithGrades();
             if (activeSiswa.length === 0) {
@@ -2960,7 +3118,6 @@
                     <title>Cetak Transkrip Massal - SDN 22 Tanah Keras</title>
                     <link class="favicon" rel="icon" type="image/png" href="https://iili.io/ByGTxzF.png">
                     <style>
-                        /* CONFIG MEDIA PRINT */
                         @media print {
                             @page {
                                 size: ${dims.cssSize} portrait;
@@ -2993,7 +3150,6 @@
                             }
                         }
 
-                        /* CONFIG MEDIA SCREEN */
                         @media screen {
                             body {
                                 background-color: #f3f4f6;
@@ -3165,7 +3321,6 @@
                         .signature-block .name-line {
                             font-weight: bold;
                             text-decoration: underline;
-                            text-transform: uppercase;
                         }
                     </style>
                 </head>
@@ -3190,17 +3345,16 @@
             printWindow.document.close();
         }
 
-        // Helper Formatter Tanggal ID
         function formatDateID(dateString) {
             if (!dateString) return '-';
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('id-ID', options);
         }
 
-        // WINDOW LOADED
         window.onload = function() {
             initDB();
             checkLoginState();
+            initSidebarState();
             renderTranskripTable();
             renderSiswaTable();
             renderMapelTables();
