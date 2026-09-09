@@ -1559,7 +1559,7 @@
                     if (cloudData && typeof cloudData === 'object') {
                         syncAndCleanDB(cloudData, true);
                         db.syncStatus = 'connected';
-                        updateCloudStatusUI('connected', 'Data Google Sheets Terkini');
+                        updateCloudStatusUI('connected', 'Tersambung');
 
                         renderTranskripTable();
                         renderSiswaTable();
@@ -1601,7 +1601,7 @@
         }
 
         function manualSyncTrigger() {
-            showProgressOverlay("MEMUAT DATA SEKOLAH", "Mengunduh ulang dari Google Sheets...");
+            showProgressOverlay("MEMUAT DATA SEKOLAH", "Sedang Singkronisasi");
             fetch(db.googleWebAppUrl)
             .then(res => res.json())
             .then(cloudData => {
@@ -1609,7 +1609,7 @@
                     if (cloudData && typeof cloudData === 'object') {
                         syncAndCleanDB(cloudData, true);
                         db.syncStatus = 'connected';
-                        updateCloudStatusUI('connected', 'Data Google Sheets Terkini');
+                        updateCloudStatusUI('connected', 'Tersambung');
 
                         renderTranskripTable();
                         renderSiswaTable();
@@ -1650,7 +1650,7 @@
                         if (cloudData && typeof cloudData === 'object') {
                             syncAndCleanDB(cloudData, true);
                             db.syncStatus = 'connected';
-                            updateCloudStatusUI('connected', 'Data Google Sheets Terkini');
+                            updateCloudStatusUI('connected', 'Tersambung');
 
                             renderTranskripTable();
                             renderSiswaTable();
