@@ -1423,7 +1423,7 @@
             if (status === 'connected') {
                 if (badge) badge.className = "flex items-center space-x-2 bg-purple-50 border border-purple-200 px-3 py-1 rounded-lg text-[11px] font-semibold text-purple-700 transition-all";
                 if (text) text.innerText = message || "Tersambung";
-                if (panelText) panelText.innerText = "Tersambung ke Google Sheets";
+                if (panelText) panelText.innerText = "Tersambung";
             } else {
                 if (badge) badge.className = "flex items-center space-x-2 bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg text-[11px] font-semibold text-amber-700 transition-all";
                 if (text) text.innerText = message || "Gagal Terhubung ke Cloud";
@@ -1847,7 +1847,7 @@
             if (tabId === 'pengaturan-kop') loadKopSettingsToForm();
             if (tabId === 'koneksi-sheet') {
                 document.getElementById('google-api-url-input').value = db.googleWebAppUrl;
-                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung ke Google Sheets' : 'Koneksi Cloud Terputus');
+                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung' : 'Koneksi Cloud Terputus');
             }
 
             updateStats();
