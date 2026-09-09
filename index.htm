@@ -1594,7 +1594,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(db)
             }).then(() => {
-                updateCloudStatusUI('connected', 'Tersinkronisasi dengan Google Sheets');
+                updateCloudStatusUI('connected', 'Tersambung');
             }).catch(err => {
                 console.error("Gagal auto-sync: ", err);
             });
