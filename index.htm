@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -259,6 +260,11 @@
                         <span class="sidebar-text text-xs">Beranda</span>
                     </button>
 
+                    <button onclick="switchTab('grafik-progress')" id="btn-grafik-progress" class="w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-lg transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium cursor-pointer">
+                        <i class="fa-solid fa-chart-line w-4 text-center text-sm"></i>
+                        <span class="sidebar-text text-xs">Grafik Progress</span>
+                    </button>
+
                     <button onclick="switchTab('data-transkrip')" id="btn-data-transkrip" class="w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-lg transition-all duration-200 text-left text-purple-300/70 hover:text-white hover:bg-purple-900/30 border border-transparent font-medium cursor-pointer">
                         <i class="fa-solid fa-file-invoice w-4 text-center text-sm"></i>
                         <span class="sidebar-text text-xs">Data Transkrip</span>
@@ -464,6 +470,79 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB GRAFIK PROGRESS (KHUSUS ADMIN) -->
+            <section id="tab-grafik-progress" class="tab-content space-y-4 fade-in hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-4 md:p-5 rounded-xl border border-neutral-200 shadow-sm">
+                    <div>
+                        <h2 class="text-xl font-black text-neutral-955">Grafik & Progress Pengisian Nilai Guru</h2>
+                        <p class="text-neutral-500 text-xs mt-0.5">Pemantauan persentase kelengkapan input nilai per Guru berdasarkan Username & Tugas Mata Pelajaran.</p>
+                    </div>
+                    <button onclick="renderGrafikProgress()" class="py-2 px-3.5 bg-purple-650 hover:bg-purple-750 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-arrows-rotate text-xs"></i> Perbarui Progress
+                    </button>
+                </div>
+
+                <!-- STATISTIK PROGRESS RINGKAS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-white p-4 rounded-xl border border-neutral-200 flex items-center space-x-3 shadow-sm">
+                        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
+                            <i class="fa-solid fa-users text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">Total Guru Pengampu</p>
+                            <h3 class="text-xl font-bold text-neutral-955 mt-0.5" id="stat-progress-total-guru">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-neutral-200 flex items-center space-x-3 shadow-sm">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+                            <i class="fa-solid fa-circle-check text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">Selesai (100%)</p>
+                            <h3 class="text-xl font-bold text-emerald-650 mt-0.5" id="stat-progress-selesai">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-neutral-200 flex items-center space-x-3 shadow-sm">
+                        <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
+                            <i class="fa-solid fa-spinner text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">Dalam Proses (1-99%)</p>
+                            <h3 class="text-xl font-bold text-purple-650 mt-0.5" id="stat-progress-proses">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-neutral-200 flex items-center space-x-3 shadow-sm">
+                        <div class="p-3 bg-rose-50 text-rose-600 rounded-lg">
+                            <i class="fa-solid fa-circle-exclamation text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-neutral-500 font-semibold uppercase tracking-wider">Belum Mengisi (0%)</p>
+                            <h3 class="text-xl font-bold text-rose-600 mt-0.5" id="stat-progress-belum">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KARTU DAFTAR PROGRESS GURU -->
+                <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-4 md:p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-7 h-7 bg-purple-50 text-purple-650 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-chart-column text-xs"></i>
+                            </div>
+                            <h3 class="text-xs font-extrabold text-neutral-900 uppercase tracking-wider">Persentase Pengisian Nilai per User Guru</h3>
+                        </div>
+                        <span class="text-[10px] text-neutral-400 font-medium">Berdasarkan data siswa terdaftar</span>
+                    </div>
+
+                    <div id="grafik-progress-container" class="space-y-4">
+                        <!-- Kartu Progress Guru Dihasilkan via JavaScript -->
                     </div>
                 </div>
             </section>
@@ -714,19 +793,19 @@
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-neutral-500 mb-1 uppercase tracking-wider">Margin Atas (cm) <span class="text-red-500">*</span></label>
-                            <input type="number" id="rekap-input-margin-top" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="1.5" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
+                            <input type="number" id="rekap-input-margin-top" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="1.2" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-neutral-500 mb-1 uppercase tracking-wider">Margin Bawah (cm) <span class="text-red-500">*</span></label>
-                            <input type="number" id="rekap-input-margin-bottom" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="1.5" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
+                            <input type="number" id="rekap-input-margin-bottom" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="1.2" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-neutral-500 mb-1 uppercase tracking-wider">Margin Kiri (cm) <span class="text-red-500">*</span></label>
-                            <input type="number" id="rekap-input-margin-left" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="2.0" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
+                            <input type="number" id="rekap-input-margin-left" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="1.2" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-neutral-500 mb-1 uppercase tracking-wider">Margin Kanan (cm) <span class="text-red-500">*</span></label>
-                            <input type="number" id="rekap-input-margin-right" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="2.0" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
+                            <input type="number" id="rekap-input-margin-right" required step="0.1" min="0" oninput="updatePageSetupFromRekap()" placeholder="1.2" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-1.5 text-xs text-neutral-955 focus:outline-none transition-all font-mono font-bold">
                         </div>
                     </div>
                 </div>
@@ -956,9 +1035,14 @@
                         <h2 class="text-xl font-black text-neutral-955">Manajemen User</h2>
                         <p class="text-neutral-500 text-xs mt-0.5">Kelola akun pengguna, kata sandi, dan peranan guru/admin sistem.</p>
                     </div>
-                    <button onclick="openUserModalForAdd()" class="py-2 px-3.5 bg-purple-650 hover:bg-purple-750 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-user-plus text-xs"></i> Tambah User Baru
-                    </button>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="exportUsersToExcel()" class="py-2 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer" title="Ekspor daftar akun Guru ke berkas Excel">
+                            <i class="fa-solid fa-file-excel text-xs"></i> Ekspor Akun Guru (.xlsx)
+                        </button>
+                        <button onclick="openUserModalForAdd()" class="py-2 px-3.5 bg-purple-650 hover:bg-purple-750 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-user-plus text-xs"></i> Tambah User Baru
+                        </button>
+                    </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-3 bg-white p-3 rounded-xl border border-neutral-200">
@@ -991,7 +1075,7 @@
 
             <footer class="mt-8 text-center text-[11px] text-neutral-500 border-t border-neutral-200 pt-4">
                 <p>&copy; 2026 SDN 22 Tanah Keras</p>
-                <p class="mt-0.5">SDN 22 TANAH KERAS KECAMATAN BAYANG</p>
+                <p class="mt-0.5">SD NEGERI 22 TANAH KERAS KECAMATAN BAYANG</p>
             </footer>
         </main>
     </div>
@@ -1240,8 +1324,8 @@
                 <input type="hidden" id="user-id">
 
                 <div>
-                    <label class="block text-[11px] font-bold text-neutral-700 mb-1 uppercase tracking-wide">Username <span class="text-red-500">*</span></label>
-                    <input type="text" id="user-username" required placeholder="guru_kelas6" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-2 text-xs focus:outline-none">
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1 uppercase tracking-wide">Username / Nama Guru <span class="text-red-500">*</span></label>
+                    <input type="text" id="user-username" required placeholder="Contoh: Yelmi Putri" class="w-full bg-neutral-50 border border-neutral-300 focus:border-purple-650 rounded-lg px-3 py-2 text-xs focus:outline-none">
                 </div>
 
                 <div>
@@ -1279,7 +1363,8 @@
             nilaiSiswa: {}, 
             arsip: [],
             users: [
-                { id: 'u_default', username: 'SDN22TK', sandi: '12345', peran: 'Admin' }
+                { id: 'u_default', username: 'SDN22TK', sandi: '12345', peran: 'Admin' },
+                { id: 'u_yelmi', username: 'Yelmi Putri', sandi: '12345', peran: 'Guru PAI' }
             ],
             logs: [],
             kop: {
@@ -1295,12 +1380,12 @@
             },
             pageSetup: {
                 paperSize: 'F4',
-                marginTop: 1.5,
-                marginBottom: 1.5,
-                marginLeft: 2.0,
-                marginRight: 2.0
+                marginTop: 1.2,
+                marginBottom: 1.2,
+                marginLeft: 1.2,
+                marginRight: 1.2
             },
-            googleWebAppUrl: 'https://script.google.com/macros/s/AKfycbw5cL5avbpU6_Alk3xWm8Qvs5xzTLFS0wIxoLzSKbSVQ9nMflZQO0oDDhc2z_58r8WW/exec',
+            googleWebAppUrl: 'https://script.google.com/macros/s/AKfycbxk9jRiv2pI1Oaegk79Ps4XNR5bcv9zWVr9dv7QBF10Ou6FLSLEwLWp-Rm23-LNNdO8/exec',
             syncStatus: 'disconnected'
         };
 
@@ -1422,8 +1507,8 @@
 
             if (status === 'connected') {
                 if (badge) badge.className = "flex items-center space-x-2 bg-purple-50 border border-purple-200 px-3 py-1 rounded-lg text-[11px] font-semibold text-purple-700 transition-all";
-                if (text) text.innerText = message || "Tersambung";
-                if (panelText) panelText.innerText = "Tersambung";
+                if (text) text.innerText = message || "Terhubung";
+                if (panelText) panelText.innerText = "Terhubung";
             } else {
                 if (badge) badge.className = "flex items-center space-x-2 bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg text-[11px] font-semibold text-amber-700 transition-all";
                 if (text) text.innerText = message || "Gagal Terhubung ke Cloud";
@@ -1559,7 +1644,7 @@
                     if (cloudData && typeof cloudData === 'object') {
                         syncAndCleanDB(cloudData, true);
                         db.syncStatus = 'connected';
-                        updateCloudStatusUI('connected', 'Tersambung');
+                        updateCloudStatusUI('connected', 'Terhubung');
 
                         renderTranskripTable();
                         renderSiswaTable();
@@ -1569,6 +1654,7 @@
                         renderArsipTable();
                         loadPageSetupToRekap();
                         updateStats();
+                        renderGrafikProgress();
                     }
                     hideProgressOverlay();
                     checkLoginState();
@@ -1594,14 +1680,14 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(db)
             }).then(() => {
-                updateCloudStatusUI('connected', 'Tersambung');
+                updateCloudStatusUI('connected', 'Tersinkronisasi dengan Google Sheets');
             }).catch(err => {
                 console.error("Gagal auto-sync: ", err);
             });
         }
 
         function manualSyncTrigger() {
-            showProgressOverlay("MEMUAT DATA SEKOLAH", "Sedang Singkronisasi");
+            showProgressOverlay("MEMUAT DATA SEKOLAH", "Mengunduh ulang dari Google Sheets...");
             fetch(db.googleWebAppUrl)
             .then(res => res.json())
             .then(cloudData => {
@@ -1609,7 +1695,7 @@
                     if (cloudData && typeof cloudData === 'object') {
                         syncAndCleanDB(cloudData, true);
                         db.syncStatus = 'connected';
-                        updateCloudStatusUI('connected', 'Tersambung');
+                        updateCloudStatusUI('connected', 'Terhubung');
 
                         renderTranskripTable();
                         renderSiswaTable();
@@ -1619,6 +1705,7 @@
                         renderArsipTable();
                         loadPageSetupToRekap();
                         updateStats();
+                        renderGrafikProgress();
                     }
                     hideProgressOverlay();
                     showToast('Sinkronisasi Sukses', 'Data berhasil diperbarui dari Google Sheets.', 'success');
@@ -1650,7 +1737,7 @@
                         if (cloudData && typeof cloudData === 'object') {
                             syncAndCleanDB(cloudData, true);
                             db.syncStatus = 'connected';
-                            updateCloudStatusUI('connected', 'Tersambung');
+                            updateCloudStatusUI('connected', 'Terhubung');
 
                             renderTranskripTable();
                             renderSiswaTable();
@@ -1660,6 +1747,7 @@
                             renderArsipTable();
                             loadPageSetupToRekap();
                             updateStats();
+                            renderGrafikProgress();
                         }
                         
                         sessionStorage.setItem('sdn22_logged_in', 'true');
@@ -1704,7 +1792,7 @@
                        name.includes('seni');
             }
             if (role === 'Guru PAI') {
-                return name.includes('agama') || name.includes('pai') || name.includes('islam');
+                return name.includes('agama') || name.includes('pai') || name.includes('islam') || name.includes('al-qur\'an') || name.includes('alquran') || name.includes('qur\'an') || name.includes('quran');
             }
             if (role === 'Guru PJOK') {
                 return name.includes('jasmani') || name.includes('olahraga') || name.includes('pjok') || name.includes('kesehatan');
@@ -1713,7 +1801,7 @@
                 return name.includes('inggris');
             }
             if (role === 'Guru BAM') {
-                return name.includes('budaya alam') || name.includes('minangkabau') || name.includes('bam') || name.includes('al-qur\'an') || name.includes('alquran');
+                return name.includes('budaya alam') || name.includes('minangkabau') || name.includes('bam');
             }
             return true;
         }
@@ -1727,6 +1815,7 @@
             if (badgeText) badgeText.innerText = `Akses: ${uRole} (${uName})`;
 
             const adminOnlyButtons = [
+                'btn-grafik-progress',
                 'btn-data-transkrip',
                 'btn-mata-pelajaran',
                 'btn-rekapan-nilai',
@@ -1814,7 +1903,7 @@
             const uRole = sessionStorage.getItem('sdn22_user_role') || 'Admin';
             const isAdmin = (uRole === 'Admin');
 
-            const restrictedTabsForGuru = ['data-transkrip', 'mata-pelajaran', 'rekapan-nilai', 'pengaturan-kop', 'koneksi-sheet', 'manajemen-user', 'arsip-transkrip'];
+            const restrictedTabsForGuru = ['grafik-progress', 'data-transkrip', 'mata-pelajaran', 'rekapan-nilai', 'pengaturan-kop', 'koneksi-sheet', 'manajemen-user', 'arsip-transkrip'];
             if (!isAdmin && restrictedTabsForGuru.includes(tabId)) {
                 tabId = 'beranda';
             }
@@ -1840,14 +1929,41 @@
             }
 
             if (tabId === 'data-siswa') renderSiswaTable();
+            if (tabId === 'grafik-progress') renderGrafikProgress();
             if (tabId === 'manajemen-user') renderUserTable();
-            if (tabId === 'input-nilai') { populateInputNilaiSiswaDropdown(); resetInputNilaiView(); }
+            if (tabId === 'input-nilai') { 
+                // Render dropdown nama siswa & reset tampilan secara INSTAN (0 Lag)
+                populateInputNilaiSiswaDropdown();
+                resetInputNilaiView();
+
+                // Lakukan sinkronisasi background di latar belakang tanpa menghambat antarmuka
+                if (db.googleWebAppUrl) {
+                    fetch(db.googleWebAppUrl)
+                    .then(res => res.json())
+                    .then(cloudData => {
+                        if (cloudData && typeof cloudData === 'object') {
+                            syncAndCleanDB(cloudData, true);
+                            updateCloudStatusUI('connected', 'Terhubung');
+                            populateInputNilaiSiswaDropdown();
+                            // Jika siswa sedang dipilih, perbarui tabel nilainya secara mulus
+                            const currentSiswaId = document.getElementById('input-nilai-siswa-select').value;
+                            if (currentSiswaId) {
+                                const activeStudent = db.siswa.find(s => s.id === currentSiswaId);
+                                if (activeStudent) renderInputNilaiTable(activeStudent);
+                            }
+                            renderGrafikProgress();
+                        }
+                    }).catch(e => {
+                        console.log("Background sync completed with local cache");
+                    });
+                }
+            }
             if (tabId === 'rekapan-nilai') { loadPageSetupToRekap(); renderRekapanTable(); }
             if (tabId === 'arsip-transkrip') { populateArsipTahunDropdown(); renderArsipTable(); }
             if (tabId === 'pengaturan-kop') loadKopSettingsToForm();
             if (tabId === 'koneksi-sheet') {
                 document.getElementById('google-api-url-input').value = db.googleWebAppUrl;
-                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung' : 'Koneksi Cloud Terputus');
+                updateCloudStatusUI(db.syncStatus, db.syncStatus === 'connected' ? 'Tersambung ke Google Sheets' : 'Koneksi Cloud Terputus');
             }
 
             updateStats();
@@ -1865,6 +1981,142 @@
                 sidebar.classList.toggle('sidebar-collapsed');
                 if (icon) icon.classList.toggle('rotate-180');
             }
+        }
+
+        /* FUNGSI GRAFIK PROGRESS PENGISIAN NILAI GURU (KHUSUS ADMIN) */
+        function renderGrafikProgress() {
+            const container = document.getElementById('grafik-progress-container');
+            if (!container) return;
+
+            // Ambil semua user guru dari Manajemen User (peran selain Admin)
+            const guruUsers = db.users.filter(u => u.peran && u.peran.toLowerCase().includes('guru'));
+
+            let totalGuruCount = guruUsers.length;
+            let countSelesai = 0;
+            let countProses = 0;
+            let countBelum = 0;
+
+            if (totalGuruCount === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center bg-neutral-50 rounded-xl border border-dashed border-neutral-300">
+                        <i class="fa-solid fa-users-slash text-2xl text-neutral-400 mb-2"></i>
+                        <p class="text-xs font-bold text-neutral-700">Belum Ada User Guru Terdaftar</p>
+                        <p class="text-[11px] text-neutral-500 mt-0.5">Silakan daftarkan akun Guru di menu Manajemen User terlebih dahulu.</p>
+                    </div>
+                `;
+                document.getElementById('stat-progress-total-guru').innerText = 0;
+                document.getElementById('stat-progress-selesai').innerText = 0;
+                document.getElementById('stat-progress-proses').innerText = 0;
+                document.getElementById('stat-progress-belum').innerText = 0;
+                return;
+            }
+
+            const totalSiswa = db.siswa.length;
+            const allMapel = [...(db.mapelWajib || []), ...(db.mapelMulok || [])];
+
+            let htmlContent = '';
+
+            guruUsers.forEach((guru) => {
+                const username = guru.username || 'Tanpa Nama';
+                const role = guru.peran || 'Guru';
+
+                // Tentukan daftar mapel yang menjadi tanggung jawab guru ini
+                const assignedMapels = allMapel.filter(m => isMapelAllowedForRole(m.nama, role));
+                const totalMapelCount = assignedMapels.length;
+
+                // Total target sel nilai = jumlah siswa * jumlah mapel diampu
+                const targetEntries = totalSiswa * totalMapelCount;
+                let filledEntries = 0;
+
+                if (targetEntries > 0) {
+                    db.siswa.forEach(student => {
+                        const nisn = normalizeNisn(student.nisn);
+                        const studentGrades = db.nilaiSiswa[nisn] || {};
+                        assignedMapels.forEach(m => {
+                            if (studentGrades[m.id] !== undefined && studentGrades[m.id] !== null && studentGrades[m.id] !== '') {
+                                filledEntries++;
+                            }
+                        });
+                    });
+                }
+
+                let percentage = targetEntries > 0 ? Math.round((filledEntries / targetEntries) * 100) : 0;
+                if (percentage > 100) percentage = 100;
+
+                let statusBadge = '';
+                let barColor = 'bg-purple-650';
+
+                if (percentage === 100 && targetEntries > 0) {
+                    countSelesai++;
+                    barColor = 'bg-emerald-500';
+                    statusBadge = `
+                        <span class="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                            <span>100% Selesai</span>
+                        </span>
+                    `;
+                } else if (percentage > 0) {
+                    countProses++;
+                    barColor = 'bg-gradient-to-r from-purple-600 to-indigo-600';
+                    statusBadge = `
+                        <span class="px-2.5 py-1 text-[10px] font-extrabold bg-purple-50 text-purple-700 border border-purple-200 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-spinner animate-spin text-purple-600"></i>
+                            <span>${percentage}% Dalam Proses</span>
+                        </span>
+                    `;
+                } else {
+                    countBelum++;
+                    barColor = 'bg-neutral-300';
+                    statusBadge = `
+                        <span class="px-2.5 py-1 text-[10px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-circle-xmark text-rose-600"></i>
+                            <span>Belum Mengisi</span>
+                        </span>
+                    `;
+                }
+
+                const mapelNames = assignedMapels.map(m => m.nama).join(', ') || 'Semua Mapel';
+
+                htmlContent += `
+                    <div class="bg-neutral-50/70 p-4 rounded-xl border border-neutral-200 hover:border-purple-300 transition-all space-y-3">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-650 text-white font-extrabold flex items-center justify-center text-sm shadow-md flex-shrink-0">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-xs font-black text-neutral-900">${username}</h4>
+                                        <span class="px-2 py-0.5 text-[9px] font-bold bg-neutral-200 text-neutral-700 rounded-md uppercase">${role}</span>
+                                    </div>
+                                    <p class="text-[10px] text-neutral-500 font-medium mt-0.5"><i class="fa-solid fa-book-open text-[9px] mr-1 text-purple-650"></i> Mapel: ${mapelNames}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between sm:justify-end gap-3">
+                                <div class="text-right">
+                                    <span class="text-xs font-black text-neutral-900 font-mono">${percentage}%</span>
+                                    <span class="text-[10px] text-neutral-400 block font-mono">(${filledEntries} / ${targetEntries} Nilai)</span>
+                                </div>
+                                ${statusBadge}
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar Visual -->
+                        <div class="space-y-1">
+                            <div class="w-full bg-neutral-200 rounded-full h-3 overflow-hidden p-0.5 border border-neutral-300">
+                                <div class="${barColor} h-full rounded-full transition-all duration-500 shadow-sm" style="width: ${percentage}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlContent;
+
+            document.getElementById('stat-progress-total-guru').innerText = totalGuruCount;
+            document.getElementById('stat-progress-selesai').innerText = countSelesai;
+            document.getElementById('stat-progress-proses').innerText = countProses;
+            document.getElementById('stat-progress-belum').innerText = countBelum;
         }
 
         function renderTranskripTable(filteredList = null) {
@@ -2049,6 +2301,7 @@
             triggerAutoSyncToCloud();
             closeModal('modal-siswa');
             renderSiswaTable();
+            renderGrafikProgress();
             showToast('Sukses', 'Data siswa berhasil disimpan.');
         }
 
@@ -2073,6 +2326,7 @@
                 if (item.nisn) delete db.nilaiSiswa[normalizeNisn(item.nisn)];
                 triggerAutoSyncToCloud();
                 renderSiswaTable();
+                renderGrafikProgress();
                 showToast('Info', 'Data siswa terhapus.');
             });
         }
@@ -2167,6 +2421,7 @@
             triggerAutoSyncToCloud();
             closeModal('modal-mapel-wajib');
             renderMapelTables();
+            renderGrafikProgress();
             showToast('Sukses', 'Mata pelajaran wajib disimpan.');
         }
 
@@ -2183,6 +2438,7 @@
                 db.mapelWajib = db.mapelWajib.filter(m => m.id !== id);
                 triggerAutoSyncToCloud();
                 renderMapelTables();
+                renderGrafikProgress();
                 showToast('Info', 'Mapel terhapus.');
             });
         }
@@ -2206,6 +2462,7 @@
             triggerAutoSyncToCloud();
             closeModal('modal-mapel-mulok');
             renderMapelTables();
+            renderGrafikProgress();
             showToast('Sukses', 'Muatan lokal disimpan.');
         }
 
@@ -2222,6 +2479,7 @@
                 db.mapelMulok = db.mapelMulok.filter(m => m.id !== id);
                 triggerAutoSyncToCloud();
                 renderMapelTables();
+                renderGrafikProgress();
                 showToast('Info', 'Mulok terhapus.');
             });
         }
@@ -2229,10 +2487,15 @@
         function populateInputNilaiSiswaDropdown() {
             const select = document.getElementById('input-nilai-siswa-select');
             if (!select) return;
-            select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-            db.siswa.forEach(s => {
-                select.innerHTML += `<option value="${s.id}">${s.nama} (NISN: ${normalizeNisn(s.nisn)})</option>`;
-            });
+            const currentSelected = select.value;
+            let optionsHtml = '<option value="">-- Pilih Siswa --</option>';
+            if (db.siswa && db.siswa.length > 0) {
+                db.siswa.forEach(s => {
+                    optionsHtml += `<option value="${s.id}">${s.nama} (NISN: ${normalizeNisn(s.nisn)})</option>`;
+                });
+            }
+            select.innerHTML = optionsHtml;
+            if (currentSelected) select.value = currentSelected;
         }
 
         function resetInputNilaiView() {
@@ -2260,17 +2523,18 @@
         function renderInputNilaiTable(student) {
             const tbody = document.getElementById('input-nilai-table-body');
             if (!tbody) return;
-            tbody.innerHTML = '';
 
             const userRole = sessionStorage.getItem('sdn22_user_role') || 'Admin';
             const nisn = normalizeNisn(student.nisn);
             const savedGrades = db.nilaiSiswa[nisn] || {};
 
+            let rowsHtml = '';
             let no = 1;
+
             db.mapelWajib.forEach(m => {
                 if (isMapelAllowedForRole(m.nama, userRole)) {
                     const val = savedGrades[m.id] !== undefined ? savedGrades[m.id] : '';
-                    tbody.innerHTML += `
+                    rowsHtml += `
                         <tr class="hover:bg-neutral-50 transition-colors">
                             <td class="p-3 text-center font-mono text-neutral-500">${no++}</td>
                             <td class="p-3 font-bold text-neutral-900">${m.nama}</td>
@@ -2286,7 +2550,7 @@
             db.mapelMulok.forEach(m => {
                 if (isMapelAllowedForRole(m.nama, userRole)) {
                     const val = savedGrades[m.id] !== undefined ? savedGrades[m.id] : '';
-                    tbody.innerHTML += `
+                    rowsHtml += `
                         <tr class="hover:bg-neutral-50 transition-colors">
                             <td class="p-3 text-center font-mono text-neutral-500">${no++}</td>
                             <td class="p-3 font-bold text-neutral-900">${m.nama}</td>
@@ -2300,9 +2564,10 @@
             });
 
             if (no === 1) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-neutral-400 text-xs font-semibold uppercase tracking-wider">Tidak ada mata pelajaran yang ditugaskan untuk peran (${userRole}).</td></tr>`;
+                rowsHtml = `<tr><td colspan="4" class="p-6 text-center text-neutral-400 text-xs font-semibold uppercase tracking-wider">Tidak ada mata pelajaran yang ditugaskan untuk peran (${userRole}).</td></tr>`;
             }
 
+            tbody.innerHTML = rowsHtml;
             calculateLiveGrades();
         }
 
@@ -2346,6 +2611,7 @@
             });
 
             triggerAutoSyncToCloud();
+            renderGrafikProgress();
             showToast('Sukses', `Nilai siswa ${student.nama} berhasil disimpan.`);
         }
 
@@ -2357,18 +2623,18 @@
             const right = document.getElementById('rekap-input-margin-right');
 
             if (size) size.value = db.pageSetup.paperSize || 'F4';
-            if (top) top.value = db.pageSetup.marginTop || 1.5;
-            if (bottom) bottom.value = db.pageSetup.marginBottom || 1.5;
-            if (left) left.value = db.pageSetup.marginLeft || 2.0;
-            if (right) right.value = db.pageSetup.marginRight || 2.0;
+            if (top) top.value = db.pageSetup.marginTop || 1.2;
+            if (bottom) bottom.value = db.pageSetup.marginBottom || 1.2;
+            if (left) left.value = db.pageSetup.marginLeft || 1.2;
+            if (right) right.value = db.pageSetup.marginRight || 1.2;
         }
 
         function updatePageSetupFromRekap() {
             db.pageSetup.paperSize = document.getElementById('rekap-input-size').value;
-            db.pageSetup.marginTop = parseFloat(document.getElementById('rekap-input-margin-top').value) || 1.5;
-            db.pageSetup.marginBottom = parseFloat(document.getElementById('rekap-input-margin-bottom').value) || 1.5;
-            db.pageSetup.marginLeft = parseFloat(document.getElementById('rekap-input-margin-left').value) || 2.0;
-            db.pageSetup.marginRight = parseFloat(document.getElementById('rekap-input-margin-right').value) || 2.0;
+            db.pageSetup.marginTop = parseFloat(document.getElementById('rekap-input-margin-top').value) || 1.2;
+            db.pageSetup.marginBottom = parseFloat(document.getElementById('rekap-input-margin-bottom').value) || 1.2;
+            db.pageSetup.marginLeft = parseFloat(document.getElementById('rekap-input-margin-left').value) || 1.2;
+            db.pageSetup.marginRight = parseFloat(document.getElementById('rekap-input-margin-right').value) || 1.2;
 
             triggerAutoSyncToCloud();
         }
@@ -2569,9 +2835,9 @@
             mapelNilaiList.filter(m => m.tipe === 'Wajib').forEach(m => {
                 wajibRows += `
                     <tr>
-                        <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: transparent;">${noWajib++}.</td>
-                        <td style="padding: 6px 10px; border: 1px solid #000; font-weight: 500; font-size: 13px; background: transparent;">${m.nama}</td>
-                        <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; background: transparent;">${formatGradeToID(m.nilai)}</td>
+                        <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-size: 14px; background: transparent;">${noWajib++}.</td>
+                        <td style="padding: 6px 10px; border: 1px solid #000; font-size: 14px; background: transparent;">${m.nama}</td>
+                        <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; background: transparent;">${formatGradeToID(m.nilai)}</td>
                     </tr>
                 `;
             });
@@ -2585,16 +2851,16 @@
                     subRows += `
                         <tr>
                             <td style="text-align: center; padding: 6px; border: 1px solid #000; background: transparent;"></td>
-                            <td style="padding: 6px 10px 6px 32px; border: 1px solid #000; font-size: 13px; background: transparent;">${subChar}. ${m.nama}</td>
-                            <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; background: transparent;">${formatGradeToID(m.nilai)}</td>
+                            <td style="padding: 6px 10px 6px 28px; border: 1px solid #000; font-size: 14px; background: transparent;">${subChar}. ${m.nama}</td>
+                            <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; background: transparent;">${formatGradeToID(m.nilai)}</td>
                         </tr>
                     `;
                 });
 
                 mulokRows = `
                     <tr>
-                        <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; background: transparent;">9.</td>
-                        <td style="padding: 6px 10px; border: 1px solid #000; font-weight: 700; font-size: 13px; background: transparent;">Muatan Lokal</td>
+                        <td style="text-align: center; padding: 6px; border: 1px solid #000; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; background: transparent;">9.</td>
+                        <td style="padding: 6px 10px; border: 1px solid #000; font-weight: 700; font-size: 14px; background: transparent;">Muatan Lokal</td>
                         <td style="border: 1px solid #000; background: transparent;"></td>
                     </tr>
                     ${subRows}
@@ -2639,7 +2905,7 @@
                         .page-container {
                             width: ${paper.width};
                             min-height: ${paper.height};
-                            padding: ${setupObj.marginTop || 1.5}cm ${setupObj.marginRight || 2.0}cm ${setupObj.marginBottom || 1.5}cm ${setupObj.marginLeft || 2.0}cm;
+                            padding: ${setupObj.marginTop || 1.2}cm ${setupObj.marginRight || 1.2}cm ${setupObj.marginBottom || 1.2}cm ${setupObj.marginLeft || 1.2}cm;
                             box-sizing: border-box;
                             position: relative;
                         }
@@ -2651,7 +2917,7 @@
                             opacity: 0.12;
                             pointer-events: none;
                             z-index: 0;
-                            width: 380px;
+                            width: 420px;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
                         }
@@ -2670,66 +2936,66 @@
                             display: flex;
                             align-items: center;
                             justify-content: space-between;
-                            border-bottom: 3px double #000;
-                            padding-bottom: 5px;
-                            margin-bottom: 12px;
+                            border-bottom: 3.5px double #000;
+                            padding-bottom: 6px;
+                            margin-bottom: 16px;
                         }
                         .kop-text {
                             text-align: center;
                             flex: 1;
-                            line-height: 1.1;
+                            line-height: 1.15;
                         }
-                        .kop-text h4 { margin: 0; font-size: 17px; font-weight: bold; text-transform: uppercase; font-family: 'Arial', sans-serif; letter-spacing: 0.5px; }
-                        .kop-text h5 { margin: 1px 0; font-size: 15px; font-weight: bold; text-transform: uppercase; font-family: 'Arial', sans-serif; }
-                        .kop-text h3 { margin: 1px 0; font-size: 21px; font-weight: 900; text-transform: uppercase; font-family: 'Arial', sans-serif; }
-                        .kop-text p.kecamatan { margin: 1px 0; font-size: 13px; font-weight: bold; text-transform: uppercase; font-family: 'Arial', sans-serif; }
-                        .kop-text p.alamat { margin: 2px 0 0 0; font-size: 11px; font-style: italic; font-family: 'Times New Roman', serif; }
-                        .kop-text p.kontak { margin: 1px 0 0 0; font-size: 11px; font-style: italic; color: #0000ee; font-family: 'Times New Roman', serif; }
+                        .kop-text h4 { margin: 0; font-size: 18px; font-weight: bold; text-transform: uppercase; font-family: 'Arial', sans-serif; letter-spacing: 0.5px; }
+                        .kop-text h5 { margin: 2px 0; font-size: 16px; font-weight: bold; text-transform: uppercase; font-family: 'Arial', sans-serif; }
+                        .kop-text h3 { margin: 2px 0; font-size: 22px; font-weight: 900; text-transform: uppercase; font-family: 'Arial', sans-serif; }
+                        .kop-text p.kecamatan { margin: 2px 0; font-size: 14px; font-weight: bold; text-transform: uppercase; font-family: 'Arial', sans-serif; }
+                        .kop-text p.alamat { margin: 3px 0 0 0; font-size: 12px; font-style: italic; font-family: 'Times New Roman', serif; }
+                        .kop-text p.kontak { margin: 2px 0 0 0; font-size: 12px; font-style: italic; color: #0000ee; font-family: 'Times New Roman', serif; }
                         .kop-text p.kontak a { color: #0000ee; text-decoration: underline; }
                         
                         .doc-title {
                             text-align: center;
-                            margin: 12px 0 14px 0;
+                            margin: 16px 0 18px 0;
                         }
                         .doc-title h2 {
                             margin: 0;
-                            font-size: 17px;
+                            font-size: 18px;
                             font-weight: bold;
                             text-transform: uppercase;
                             letter-spacing: 1px;
                             font-family: 'Arial', sans-serif;
                         }
                         .doc-title p {
-                            margin: 2px 0 0 0;
-                            font-size: 13px;
+                            margin: 3px 0 0 0;
+                            font-size: 14px;
                             font-family: 'Times New Roman', serif;
                         }
 
                         .meta-table {
                             width: 100%;
-                            font-size: 13px;
-                            margin-bottom: 16px;
+                            font-size: 14px;
+                            margin-bottom: 18px;
                             border-collapse: collapse;
-                            line-height: 1.4;
+                            line-height: 1.45;
                         }
                         .meta-table td {
-                            padding: 3px 4px;
+                            padding: 4px 6px;
                             vertical-align: top;
                         }
 
                         .grade-table {
                             width: 100%;
                             border-collapse: collapse;
-                            font-size: 13px;
-                            margin-bottom: 20px;
+                            font-size: 14px;
+                            margin-bottom: 24px;
                             background: transparent;
                         }
                         .grade-table th {
                             border: 1px solid #000;
-                            padding: 7px;
+                            padding: 8px 6px;
                             background: transparent;
                             text-transform: capitalize;
-                            font-size: 13px;
+                            font-size: 14px;
                             font-weight: bold;
                         }
                         .grade-table td {
@@ -2739,12 +3005,12 @@
                         .ttd-container {
                             display: flex;
                             justify-content: flex-end;
-                            margin-top: 20px;
+                            margin-top: 32px;
                         }
                         .ttd-box {
                             width: 320px;
                             text-align: center;
-                            font-size: 13px;
+                            font-size: 14px;
                             line-height: 1.4;
                         }
                     </style>
@@ -2824,8 +3090,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="2" style="padding: 7px 10px; border: 1px solid #000; font-weight: bold; text-align: center; background: transparent;">Rata-rata</td>
-                                        <td style="padding: 7px; border: 1px solid #000; text-align: center; font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 13px; background: transparent;">${formatGradeToID(rerataVal)}</td>
+                                        <td colspan="2" style="padding: 7px 10px; border: 1px solid #000; font-weight: bold; text-align: center; background: transparent; font-size: 14px;">Rata-rata</td>
+                                        <td style="padding: 7px; border: 1px solid #000; text-align: center; font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 14px; background: transparent;">${formatGradeToID(rerataVal)}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -2833,10 +3099,10 @@
                             <div class="ttd-container">
                                 <div class="ttd-box">
                                     <p style="margin: 0;">${transObj.tempat ? 'Kabupaten ' + transObj.tempat : 'Kabupaten Pesisir Selatan'}, ${formatDateIndonesian(transObj.tglTranskrip || '2026-06-30')}</p>
-                                    <p style="margin: 2px 0 0 0;">Kepala Sekolah,</p>
-                                    <div style="height: 60px;"></div>
+                                    <p style="margin: 3px 0 0 0;">Kepala Sekolah,</p>
+                                    <div style="height: 70px;"></div>
                                     <p style="margin: 0; font-weight: bold; text-decoration: underline;">${transObj.namaKepsek || 'Rina Melati, M.Pd.'}</p>
-                                    <p style="margin: 2px 0 0 0; font-weight: bold;">NIP. ${transObj.nip || '197103161993042001'}</p>
+                                    <p style="margin: 3px 0 0 0; font-weight: bold;">NIP. ${transObj.nip || '197103161993042001'}</p>
                                 </div>
                             </div>
                         </div>
@@ -3136,6 +3402,7 @@
             triggerAutoSyncToCloud();
             closeModal('modal-user');
             renderUserTable();
+            renderGrafikProgress();
             showToast('Sukses', 'Data user berhasil disimpan.');
         }
 
@@ -3156,6 +3423,7 @@
                 db.users = db.users.filter(item => item.id !== id);
                 triggerAutoSyncToCloud();
                 renderUserTable();
+                renderGrafikProgress();
                 showToast('Info', 'User berhasil dihapus.');
             });
         }
@@ -3167,6 +3435,43 @@
                 (u.peran && u.peran.toLowerCase().includes(q))
             );
             renderUserTable(filtered);
+        }
+
+        /* FUNGSI EKSPOR AKUN GURU KE EXCEL (.XLSX) */
+        function exportUsersToExcel() {
+            // Filter hanya akun Guru (mengabaikan akun Admin demi keamanan)
+            const guruUsers = db.users.filter(u => u.peran && u.peran.toLowerCase() !== 'admin');
+            
+            if (guruUsers.length === 0) {
+                showToast('Info', 'Tidak ada data akun Guru untuk diekspor.', 'error');
+                return;
+            }
+
+            // Menyusun data rapi khusus akun Guru
+            const exportData = guruUsers.map((u, index) => ({
+                'No': index + 1,
+                'Username / Nama Guru': u.username,
+                'Sandi / Password': u.sandi,
+                'Peran / Tugas': u.peran
+            }));
+
+            // Menggunakan pustaka SheetJS untuk membuat file .xlsx asli
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            
+            // Set lebar kolom agar rapi saat dibuka di Microsoft Excel
+            worksheet['!cols'] = [
+                { wch: 6 },  // No
+                { wch: 28 }, // Username
+                { wch: 20 }, // Sandi
+                { wch: 28 }  // Peran
+            ];
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Daftar Akun Guru");
+
+            // Mengunduh file Excel secara otomatis
+            XLSX.writeFile(workbook, "Daftar_Akun_Guru_SDN22TK.xlsx");
+            showToast('Sukses Ekspor', 'Data akun Guru berhasil diunduh ke format Excel (.xlsx).', 'success');
         }
 
         window.onload = function() {
