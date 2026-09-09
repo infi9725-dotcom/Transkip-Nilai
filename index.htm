@@ -153,7 +153,7 @@
             </div>
             
             <div class="space-y-0.5">
-                <h3 class="text-xs font-extrabold tracking-wider uppercase text-white" id="loading-status-title">Memuat Data Sekolah</h3>
+                <h3 class="text-xs font-extrabold tracking-wider uppercase text-white" id="loading-status-title">Memuat Data</h3>
                 <p class="text-[10px] text-purple-200 font-medium" id="loading-status-subtitle">Menghubungkan ke Google Sheets SDN 22 Tanah Keras...</p>
             </div>
             
@@ -1471,7 +1471,7 @@
         function showProgressOverlay(title, subtitle) {
             const overlay = document.getElementById('loading-overlay');
             if (!overlay) return;
-            document.getElementById('loading-status-title').innerText = title || 'MEMUAT DATA SEKOLAH';
+            document.getElementById('loading-status-title').innerText = title || 'MEMUAT DATA';
             document.getElementById('loading-status-subtitle').innerText = subtitle || 'Menghubungkan ke Google Sheets...';
             document.getElementById('progress-percentage').innerText = '0%';
             document.getElementById('progress-bar-fill').style.width = '0%';
@@ -1623,7 +1623,7 @@
         }
 
         function initialDataFetchOnLoad() {
-            showProgressOverlay("MEMUAT DATA SEKOLAH", "Tunggu Sebentar");
+            showProgressOverlay("MEMUAT DATA", "Tunggu Sebentar");
             
             let progressVal = 15;
             const progressInterval = setInterval(() => {
@@ -1687,7 +1687,7 @@
         }
 
         function manualSyncTrigger() {
-            showProgressOverlay("MEMUAT DATA SEKOLAH", "Mengunduh ulang dari Google Sheets...");
+            showProgressOverlay("MEMUAT DATA", "Mengunduh ulang dari Google Sheets...");
             fetch(db.googleWebAppUrl)
             .then(res => res.json())
             .then(cloudData => {
